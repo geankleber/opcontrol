@@ -212,9 +212,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         const loaded = await loadObservationsFromSupabase();
         if (!loaded) {
             observations = [...defaultObservations];
+            observations.sort((a, b) => a.hora.localeCompare(b.hora));
         }
     } else {
         observations = [...defaultObservations];
+        observations.sort((a, b) => a.hora.localeCompare(b.hora));
     }
 
     // Inicializar visualizações
@@ -734,6 +736,9 @@ async function saveObservation() {
         }
     }
 
+    // Ordenar observações por hora após adicionar/editar
+    observations.sort((a, b) => a.hora.localeCompare(b.hora));
+
     renderObservations();
     closeModal();
 }
@@ -857,6 +862,9 @@ function handleObsFileUpload(e) {
                 texto: row.texto || row.Texto || row.observacao || row.Observacao || '',
                 timestamp: row.timestamp || new Date().toISOString()
             }));
+
+            // Ordenar observações por hora após carregar
+            observations.sort((a, b) => a.hora.localeCompare(b.hora));
 
             renderObservations();
             alert('Observações carregadas com sucesso!');
