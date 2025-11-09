@@ -79,9 +79,6 @@ const defaultObservations = [
 // ===========================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Atualizar título com data atual
-    updatePageTitle();
-
     // Carregar dados padrão
     currentData = [...defaultData];
     observations = [...defaultObservations];
@@ -118,15 +115,34 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     });
+
+    // Event Listener - Data do relatório
+    document.getElementById('reportDate').addEventListener('change', updatePageTitleFromDate);
+
+    // Inicializar data com data atual
+    initializeReportDate();
 });
 
 // ===========================
 // ATUALIZAÇÃO DE DATA
 // ===========================
 
-function updatePageTitle() {
+function initializeReportDate() {
     const today = new Date();
-    const dateStr = today.toLocaleDateString('pt-BR', {
+    const dateStr = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    document.getElementById('reportDate').value = dateStr;
+    updatePageTitleFromDate();
+}
+
+function updatePageTitleFromDate() {
+    const dateInput = document.getElementById('reportDate').value;
+    if (!dateInput) {
+        document.getElementById('pageTitle').textContent = 'UHE Teles Pires - Desempenho da Geração';
+        return;
+    }
+
+    const date = new Date(dateInput + 'T00:00:00');
+    const dateStr = date.toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
@@ -135,15 +151,49 @@ function updatePageTitle() {
         `UHE Teles Pires - Desempenho da Geração - ${dateStr}`;
 }
 
+function updatePageTitle() {
+    // Mantém compatibilidade com código existente
+    updatePageTitleFromDate();
+}
+
 // ===========================
 // CÁLCULOS E ANALYTICS
 // ===========================
+
+function isDentroFaixa(geracao, pdp) {
+    const desvio = geracao - pdp;
+
+    // Desvio positivo: até +100 MW
+    if (desvio > 0) {
+        return desvio <= 100;
+    }
+
+    // Desvio negativo: regras baseadas no valor programado
+    const desvioAbs = Math.abs(desvio);
+
+    if (pdp >= 0 && pdp <= 100) {
+        // 0-100 MW: até 10 MW de desvio negativo
+        return desvioAbs <= 10;
+    } else if (pdp > 100 && pdp <= 200) {
+        // 100-200 MW: até 10% do valor programado
+        return desvioAbs <= pdp * 0.10;
+    } else if (pdp > 200 && pdp <= 1000) {
+        // 200-1000 MW: até 5% do valor programado
+        return desvioAbs <= pdp * 0.05;
+    } else if (pdp > 1000) {
+        // Acima de 1000 MW: até 2% do valor programado OU até 100 MW (o que for menor)
+        const limite = Math.min(pdp * 0.02, 100);
+        return desvioAbs <= limite;
+    }
+
+    return false;
+}
 
 function calculateAnalytics() {
     if (currentData.length === 0) return;
 
     // Desvio médio
-    const desvios = currentData.map(d => Math.abs(d.geracao - d.pdp));
+    const desvios = currentData.map(d => d.geracao - d.pdp);
     const desvioMedio = desvios.reduce((a, b) => a + b, 0) / desvios.length;
 
     // Pico de geração
@@ -151,14 +201,19 @@ function calculateAnalytics() {
         d.geracao > max.geracao ? d : max
     );
 
-    // Eficiência (dentro de ±50MW)
+    // Eficiência (dentro da faixa baseada nas novas regras)
     const dentroFaixa = currentData.filter(d =>
-        Math.abs(d.geracao - d.pdp) <= 50
+        isDentroFaixa(d.geracao, d.pdp)
     ).length;
     const eficiencia = (dentroFaixa / currentData.length) * 100;
 
     // Atualizar KPIs
-    document.getElementById('desvioMedio').textContent = `${desvioMedio.toFixed(1)} MW`;
+    const desvioMedioEl = document.getElementById('desvioMedio');
+    if (desvioMedio < 0) {
+        desvioMedioEl.innerHTML = `<span style="color: red;">${desvioMedio.toFixed(1)} MW</span>`;
+    } else {
+        desvioMedioEl.textContent = `${desvioMedio.toFixed(1)} MW`;
+    }
     document.getElementById('picoGeracao').textContent = `${picoData.geracao} MW`;
     document.getElementById('picoHorario').textContent = picoData.hora;
     document.getElementById('eficiencia').textContent = `${eficiencia.toFixed(1)}%`;
@@ -186,14 +241,18 @@ function calculatePeriodStats() {
         if (periodData.length > 0) {
             const avgGeracao = periodData.reduce((sum, d) => sum + d.geracao, 0) / periodData.length;
             const avgPdp = periodData.reduce((sum, d) => sum + d.pdp, 0) / periodData.length;
-            const avgDesvio = periodData.reduce((sum, d) => sum + Math.abs(d.geracao - d.pdp), 0) / periodData.length;
+            const avgDesvio = avgGeracao - avgPdp;
+
+            const desvioFormatted = avgDesvio < 0
+                ? `<span style="color: red;">${avgDesvio.toFixed(1)}</span>`
+                : avgDesvio.toFixed(1);
 
             const row = tbody.insertRow();
             row.innerHTML = `
                 <td>${period.name}</td>
                 <td>${avgGeracao.toFixed(1)}</td>
                 <td>${avgPdp.toFixed(1)}</td>
-                <td>${avgDesvio.toFixed(1)}</td>
+                <td>${desvioFormatted}</td>
             `;
         }
     });
@@ -322,17 +381,40 @@ function renderHeatmap() {
     heatmap.innerHTML = '';
 
     currentData.forEach((d, index) => {
-        const desvio = Math.abs(d.geracao - d.pdp);
+        const desvio = d.geracao - d.pdp;
         const cell = document.createElement('div');
         cell.className = 'heatmap-cell';
 
-        // Determinar cor baseada no desvio
-        if (desvio <= 50) {
+        // Determinar cor baseada nas novas regras
+        if (isDentroFaixa(d.geracao, d.pdp)) {
+            // Verde: dentro da faixa
             cell.classList.add('green');
-        } else if (desvio <= 200) {
-            cell.classList.add('yellow');
         } else {
-            cell.classList.add('red');
+            // Calcular limite para amarelo (2x o limite de "dentro da faixa")
+            const desvioAbs = Math.abs(desvio);
+            let limiteAmarelo;
+
+            if (desvio > 0) {
+                // Desvio positivo: até 200 MW para amarelo
+                limiteAmarelo = 200;
+            } else {
+                // Desvio negativo: 2x os limites de "dentro da faixa"
+                if (d.pdp >= 0 && d.pdp <= 100) {
+                    limiteAmarelo = 20;
+                } else if (d.pdp > 100 && d.pdp <= 200) {
+                    limiteAmarelo = d.pdp * 0.20;
+                } else if (d.pdp > 200 && d.pdp <= 1000) {
+                    limiteAmarelo = d.pdp * 0.10;
+                } else if (d.pdp > 1000) {
+                    limiteAmarelo = Math.min(d.pdp * 0.04, 200);
+                }
+            }
+
+            if (desvioAbs <= limiteAmarelo) {
+                cell.classList.add('yellow');
+            } else {
+                cell.classList.add('red');
+            }
         }
 
         cell.innerHTML = `
@@ -369,6 +451,10 @@ function renderObservations() {
         const timestamp = new Date(obs.timestamp);
         const timestampStr = timestamp.toLocaleString('pt-BR');
 
+        const desvioFormatted = obs.desvio < 0
+            ? `<span style="color: red;">${obs.desvio} MW</span>`
+            : `${obs.desvio > 0 ? '+' : ''}${obs.desvio} MW`;
+
         item.innerHTML = `
             <div class="obs-header">
                 <span class="obs-time">${obs.hora}</span>
@@ -378,7 +464,7 @@ function renderObservations() {
                 </div>
             </div>
             <div class="obs-data">
-                Geração: ${obs.geracao} MW | PDP: ${obs.pdp} MW | Desvio: ${obs.desvio > 0 ? '+' : ''}${obs.desvio} MW
+                Geração: ${obs.geracao} MW | PDP: ${obs.pdp} MW | Desvio: ${desvioFormatted}
             </div>
             <div class="obs-text">${obs.texto}</div>
             <div class="obs-timestamp">Registrado em: ${timestampStr}</div>

@@ -14,7 +14,13 @@
     <div class="container">
         <!-- Cabeçalho -->
         <header class="header">
-            <h1 id="pageTitle">UHE Teles Pires - Desempenho da Geração</h1>
+            <div style="flex: 1;">
+                <h1 id="pageTitle">UHE Teles Pires - Desempenho da Geração</h1>
+                <div class="no-print" style="margin-top: 10px;">
+                    <label for="reportDate" style="font-size: 0.875rem; color: #666; margin-right: 8px;">Data:</label>
+                    <input type="date" id="reportDate" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.875rem;">
+                </div>
+            </div>
             <div class="header-actions no-print">
                 <button id="uploadBtn" class="btn btn-primary">Carregar data.xlsx</button>
                 <button id="downloadTemplateBtn" class="btn btn-secondary">Download data.xlsx</button>
@@ -45,7 +51,7 @@
                 <div class="kpi-content">
                     <div class="kpi-label">Eficiência</div>
                     <div class="kpi-value" id="eficiencia">--%</div>
-                    <div class="kpi-subtitle">Dentro da faixa ±50MW</div>
+                    <div class="kpi-subtitle">Dentro da faixa programada</div>
                 </div>
             </div>
         </div>
@@ -67,13 +73,13 @@
 
         <!-- Tabela Resumo Estatístico -->
         <div class="card">
-            <h2>Resumo Estatístico por Período</h2>
+            <h2>Resumo Estatístico da Geração por Período</h2>
             <table class="stats-table">
                 <thead>
                     <tr>
                         <th>Período</th>
-                        <th>Geração Média (MW)</th>
-                        <th>PDP Médio (MW)</th>
+                        <th>Realizada Média (MW)</th>
+                        <th>Programada Média (MW)</th>
                         <th>Desvio Médio (MW)</th>
                     </tr>
                 </thead>
