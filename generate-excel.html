@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Arquivos Excel - UHE Teles Pires</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .btn-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .info {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .success {
+            background: #e8f5e9;
+            border-left: 4px solid #56ab2f;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .success h3 {
+            margin-top: 0;
+            color: #56ab2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏭 Gerador de Arquivos Excel</h1>
+        <p>Este utilitário gera automaticamente os arquivos de exemplo para o sistema de monitoramento da UHE Teles Pires.</p>
+
+        <div class="info">
+            <h3>📊 data.xlsx</h3>
+            <p>
+                <strong>48 linhas</strong> de dados de geração com intervalos de 30 minutos (00:00 às 23:30)<br>
+                <strong>Colunas:</strong> hora, pdp, geracao<br>
+                <strong>Inclui:</strong> Queda de geração às 12:00 (993 MW)
+            </p>
+        </div>
+
+        <div class="info">
+            <h3>📝 observacoes.xlsx</h3>
+            <p>
+                <strong>1 observação</strong> de exemplo sobre a queda de geração<br>
+                <strong>Colunas:</strong> hora, geracao, pdp, desvio, texto, timestamp
+            </p>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="generateDataExcel()">📥 Gerar data.xlsx</button>
+            <button class="btn btn-secondary" onclick="generateObservationsExcel()">📥 Gerar observacoes.xlsx</button>
+            <button class="btn btn-success" onclick="generateBothFiles()">📥 Gerar Ambos</button>
+        </div>
+
+        <div class="success" id="successMessage">
+            <h3>✅ Sucesso!</h3>
+            <p id="successText">Arquivos gerados com sucesso!</p>
+        </div>
+    </div>
+
+    <script>
+        // Dados de exemplo (48 pontos - 00:00 a 23:30)
+        const dataExemplo = [
+            { hora: '00:00', pdp: 1790, geracao: 1785 },
+            { hora: '00:30', pdp: 1790, geracao: 1792 },
+            { hora: '01:00', pdp: 1790, geracao: 1788 },
+            { hora: '01:30', pdp: 1790, geracao: 1795 },
+            { hora: '02:00', pdp: 1790, geracao: 1787 },
+            { hora: '02:30', pdp: 1790, geracao: 1791 },
+            { hora: '03:00', pdp: 1790, geracao: 1789 },
+            { hora: '03:30', pdp: 1790, geracao: 1793 },
+            { hora: '04:00', pdp: 1790, geracao: 1786 },
+            { hora: '04:30', pdp: 1790, geracao: 1790 },
+            { hora: '05:00', pdp: 1790, geracao: 1794 },
+            { hora: '05:30', pdp: 1790, geracao: 1788 },
+            { hora: '06:00', pdp: 1790, geracao: 1791 },
+            { hora: '06:30', pdp: 1790, geracao: 1787 },
+            { hora: '07:00', pdp: 1790, geracao: 1792 },
+            { hora: '07:30', pdp: 1790, geracao: 1789 },
+            { hora: '08:00', pdp: 1790, geracao: 1793 },
+            { hora: '08:30', pdp: 1790, geracao: 1786 },
+            { hora: '09:00', pdp: 1790, geracao: 1795 },
+            { hora: '09:30', pdp: 1790, geracao: 1788 },
+            { hora: '10:00', pdp: 1790, geracao: 1790 },
+            { hora: '10:30', pdp: 1790, geracao: 1792 },
+            { hora: '11:00', pdp: 1790, geracao: 1787 },
+            { hora: '11:30', pdp: 1790, geracao: 1789 },
+            { hora: '12:00', pdp: 1790, geracao: 993 },  // Queda significativa
+            { hora: '12:30', pdp: 1790, geracao: 1005 },
+            { hora: '13:00', pdp: 1790, geracao: 1450 },
+            { hora: '13:30', pdp: 1790, geracao: 1650 },
+            { hora: '14:00', pdp: 1790, geracao: 1750 },
+            { hora: '14:30', pdp: 1790, geracao: 1785 },
+            { hora: '15:00', pdp: 1790, geracao: 1790 },
+            { hora: '15:30', pdp: 1790, geracao: 1788 },
+            { hora: '16:00', pdp: 1790, geracao: 1792 },
+            { hora: '16:30', pdp: 1790, geracao: 1787 },
+            { hora: '17:00', pdp: 1790, geracao: 1791 },
+            { hora: '17:30', pdp: 1790, geracao: 1789 },
+            { hora: '18:00', pdp: 1790, geracao: 1793 },
+            { hora: '18:30', pdp: 1790, geracao: 1786 },
+            { hora: '19:00', pdp: 1790, geracao: 1795 },
+            { hora: '19:30', pdp: 1790, geracao: 1788 },
+            { hora: '20:00', pdp: 1790, geracao: 1790 },
+            { hora: '20:30', pdp: 1790, geracao: 1792 },
+            { hora: '21:00', pdp: 1790, geracao: 1787 },
+            { hora: '21:30', pdp: 1790, geracao: 1789 },
+            { hora: '22:00', pdp: 1790, geracao: 1791 },
+            { hora: '22:30', pdp: 1790, geracao: 1788 },
+            { hora: '23:00', pdp: 1790, geracao: 1793 },
+            { hora: '23:30', pdp: 1790, geracao: 1786 }
+        ];
+
+        // Observações de exemplo
+        const observacoesExemplo = [
+            {
+                hora: '12:00',
+                geracao: 993,
+                pdp: 1790,
+                desvio: -797,
+                texto: 'Queda significativa de geração - verificar equipamentos. Possível problema na unidade geradora 3.',
+                timestamp: new Date('2024-01-15T12:00:00').toISOString()
+            }
+        ];
+
+        function generateDataExcel() {
+            const ws = XLSX.utils.json_to_sheet(dataExemplo);
+
+            // Ajustar largura das colunas
+            ws['!cols'] = [
+                { wch: 8 },  // hora
+                { wch: 10 }, // pdp
+                { wch: 10 }  // geracao
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Dados');
+            XLSX.writeFile(wb, 'data.xlsx');
+
+            showSuccess('Arquivo data.xlsx gerado com sucesso! (48 linhas de dados)');
+        }
+
+        function generateObservationsExcel() {
+            const ws = XLSX.utils.json_to_sheet(observacoesExemplo);
+
+            // Ajustar largura das colunas
+            ws['!cols'] = [
+                { wch: 8 },  // hora
+                { wch: 10 }, // geracao
+                { wch: 10 }, // pdp
+                { wch: 10 }, // desvio
+                { wch: 60 }, // texto
+                { wch: 25 }  // timestamp
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Observações');
+            XLSX.writeFile(wb, 'observacoes.xlsx');
+
+            showSuccess('Arquivo observacoes.xlsx gerado com sucesso! (1 observação de exemplo)');
+        }
+
+        function generateBothFiles() {
+            generateDataExcel();
+            setTimeout(() => {
+                generateObservationsExcel();
+                showSuccess('Ambos os arquivos foram gerados com sucesso!<br>📊 data.xlsx (48 linhas)<br>📝 observacoes.xlsx (1 observação)');
+            }, 500);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            successText.innerHTML = message;
+            successDiv.style.display = 'block';
+
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

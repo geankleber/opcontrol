@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UHE Teles Pires - Monitor de Geração</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- SheetJS -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header class="header">
+            <h1 id="pageTitle">UHE Teles Pires - COI-GT - Desempenho da Geração</h1>
+            <div class="header-actions no-print">
+                <button id="uploadBtn" class="btn btn-primary">📂 Carregar data.xlsx</button>
+                <button id="downloadTemplateBtn" class="btn btn-secondary">⬇️ Download data.xlsx</button>
+                <button id="printBtn" class="btn btn-success">🖨️ Imprimir Relatório</button>
+                <input type="file" id="fileInput" accept=".xlsx,.xls" style="display: none;">
+            </div>
+        </header>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+            <div class="kpi-card kpi-purple">
+                <div class="kpi-icon">📊</div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Desvio Médio</div>
+                    <div class="kpi-value" id="desvioMedio">-- MW</div>
+                </div>
+            </div>
+            <div class="kpi-card kpi-green">
+                <div class="kpi-icon">⚡</div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Pico de Geração</div>
+                    <div class="kpi-value" id="picoGeracao">-- MW</div>
+                    <div class="kpi-subtitle" id="picoHorario">--:--</div>
+                </div>
+            </div>
+            <div class="kpi-card kpi-blue">
+                <div class="kpi-icon">✓</div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Eficiência</div>
+                    <div class="kpi-value" id="eficiencia">--%</div>
+                    <div class="kpi-subtitle">Dentro da faixa ±50MW</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico Principal -->
+        <div class="card">
+            <h2>Geração vs Programado</h2>
+            <canvas id="mainChart"></canvas>
+        </div>
+
+        <!-- Heatmap de Desvios -->
+        <div class="card">
+            <h2>Heatmap de Desvios</h2>
+            <div class="heatmap-legend">
+                🟢 Dentro do Programado | 🟡 Desvio Moderado | 🔴 Desvio Alto
+            </div>
+            <div id="heatmap" class="heatmap-grid"></div>
+        </div>
+
+        <!-- Tabela Resumo Estatístico -->
+        <div class="card">
+            <h2>Resumo Estatístico por Período</h2>
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Período</th>
+                        <th>Geração Média (MW)</th>
+                        <th>PDP Médio (MW)</th>
+                        <th>Desvio Médio (MW)</th>
+                    </tr>
+                </thead>
+                <tbody id="statsTableBody">
+                    <tr>
+                        <td>Madrugada (00h-06h)</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                    <tr>
+                        <td>Manhã (06h-12h)</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                    <tr>
+                        <td>Tarde (12h-18h)</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                    <tr>
+                        <td>Noite (18h-00h)</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sistema de Observações -->
+        <div class="card">
+            <div class="observations-header">
+                <h2>Observações <span id="obsCount" class="obs-count">(0)</span></h2>
+                <div class="no-print">
+                    <button id="uploadObsBtn" class="btn btn-sm btn-secondary">📂 Carregar Observações</button>
+                    <button id="downloadObsBtn" class="btn btn-sm btn-secondary">⬇️ Download Observações</button>
+                    <input type="file" id="obsFileInput" accept=".xlsx,.xls" style="display: none;">
+                </div>
+            </div>
+            <div id="observationsList" class="observations-list"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Observação -->
+    <div id="obsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Adicionar Observação</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Hora:</label>
+                    <input type="text" id="obsHora" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Geração (MW):</label>
+                    <input type="text" id="obsGeracao" readonly>
+                </div>
+                <div class="form-group">
+                    <label>PDP (MW):</label>
+                    <input type="text" id="obsPdp" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Desvio (MW):</label>
+                    <input type="text" id="obsDesvio" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Observação:</label>
+                    <textarea id="obsTexto" rows="4" placeholder="Digite a observação..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelObsBtn" class="btn btn-secondary">Cancelar</button>
+                <button id="saveObsBtn" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
