@@ -628,10 +628,6 @@ body {
         font-size: 0.875rem;
     }
 
-    .observation-item {
-        page-break-inside: avoid;
-    }
-
     .btn-icon {
         display: none;
     }
