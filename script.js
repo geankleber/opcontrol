@@ -132,7 +132,7 @@ function updatePageTitle() {
         year: 'numeric'
     });
     document.getElementById('pageTitle').textContent =
-        `UHE Teles Pires - COI-GT - Desempenho da Geração - ${dateStr}`;
+        `UHE Teles Pires - Desempenho da Geração - ${dateStr}`;
 }
 
 // ===========================
@@ -214,13 +214,19 @@ function renderMainChart() {
     const geracaoData = currentData.map(d => d.geracao);
     const pdpData = currentData.map(d => d.pdp);
 
+    // Calcular valor máximo das séries + 5%
+    const maxGeracao = Math.max(...geracaoData);
+    const maxPdp = Math.max(...pdpData);
+    const maxValue = Math.max(maxGeracao, maxPdp);
+    const yMax = maxValue * 1.05; // 5% a mais
+
     mainChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [
                 {
-                    label: 'Geração Real (MW)',
+                    label: 'Geração Realizada',
                     data: geracaoData,
                     borderColor: '#4facfe',
                     backgroundColor: 'rgba(79, 172, 254, 0.1)',
@@ -229,7 +235,7 @@ function renderMainChart() {
                     fill: true
                 },
                 {
-                    label: 'Geração Programada (PDP)',
+                    label: 'Geração Programada',
                     data: pdpData,
                     borderColor: '#56ab2f',
                     backgroundColor: 'rgba(86, 171, 47, 0.1)',
@@ -265,21 +271,41 @@ function renderMainChart() {
                 },
                 legend: {
                     display: true,
-                    position: 'top'
+                    position: 'bottom'
                 }
             },
             scales: {
                 y: {
                     beginAtZero: false,
+                    max: yMax,
                     title: {
                         display: true,
                         text: 'Geração (MW)'
+                    },
+                    ticks: {
+                        callback: function(value, index, ticks) {
+                            // Não exibir o último rótulo (valor máximo)
+                            if (index === ticks.length - 1) {
+                                return '';
+                            }
+                            return value;
+                        }
                     }
                 },
                 x: {
                     title: {
                         display: true,
                         text: 'Horário'
+                    },
+                    ticks: {
+                        callback: function(value, index, ticks) {
+                            const label = this.getLabelForValue(value);
+                            // Exibir apenas horas cheias (terminam com :00)
+                            if (label.endsWith(':00')) {
+                                return label;
+                            }
+                            return '';
+                        }
                     }
                 }
             }
@@ -345,14 +371,14 @@ function renderObservations() {
 
         item.innerHTML = `
             <div class="obs-header">
-                <span class="obs-time">⏰ ${obs.hora}</span>
+                <span class="obs-time">${obs.hora}</span>
                 <div class="obs-actions no-print">
                     <button class="btn-icon" onclick="editObservation(${index})" title="Editar">✏️</button>
                     <button class="btn-icon" onclick="deleteObservation(${index})" title="Remover">🗑️</button>
                 </div>
             </div>
             <div class="obs-data">
-                📊 Geração: ${obs.geracao} MW | PDP: ${obs.pdp} MW | Desvio: ${obs.desvio > 0 ? '+' : ''}${obs.desvio} MW
+                Geração: ${obs.geracao} MW | PDP: ${obs.pdp} MW | Desvio: ${obs.desvio > 0 ? '+' : ''}${obs.desvio} MW
             </div>
             <div class="obs-text">${obs.texto}</div>
             <div class="obs-timestamp">Registrado em: ${timestampStr}</div>

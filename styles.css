@@ -58,27 +58,27 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #4facfe;
     color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
 }
 
 .btn-secondary {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #4facfe;
     color: white;
 }
 
 .btn-secondary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
 }
 
 .btn-success {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: #4facfe;
     color: white;
 }
 
@@ -264,7 +264,7 @@ body {
 }
 
 .stats-table th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #4facfe;
     color: white;
     padding: 12px;
     text-align: left;
@@ -513,6 +513,11 @@ body {
         max-width: 100%;
     }
 
+    .header h1 {
+        font-size: 1.25rem;
+        white-space: nowrap;
+    }
+
     .card {
         page-break-inside: avoid;
         border: 1px solid #ccc;
@@ -528,6 +533,28 @@ body {
         color-adjust: exact;
     }
 
+    .kpi-card {
+        padding: 12px;
+    }
+
+    .kpi-icon {
+        font-size: 1.75rem;
+        width: 40px;
+        height: 40px;
+    }
+
+    .kpi-value {
+        font-size: 1.25rem;
+    }
+
+    .kpi-label {
+        font-size: 0.75rem;
+    }
+
+    .kpi-subtitle {
+        font-size: 0.65rem;
+    }
+
     .kpi-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 15px;
@@ -539,17 +566,54 @@ body {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         color-adjust: exact;
+        padding: 4px;
+        border-radius: 3px;
+        border-width: 1px;
+    }
+
+    .heatmap-time {
+        font-size: 12pt;
+        margin-bottom: 2px;
+    }
+
+    .heatmap-value {
+        font-size: 11pt;
+    }
+
+    .heatmap-grid {
+        gap: 4px;
+        grid-template-columns: repeat(12, 1fr);
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .card:has(#heatmap) {
+        overflow: hidden;
     }
 
     /* Ajustar gráfico para impressão */
+    .card:has(#mainChart) {
+        page-break-inside: avoid;
+    }
+
     #mainChart {
-        max-height: 240px;
+        max-height: 280px;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
     }
 
     .stats-table th {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         color-adjust: exact;
+        padding: 8px;
+        font-size: 0.875rem;
+    }
+
+    .stats-table td {
+        padding: 8px;
+        font-size: 0.875rem;
     }
 
     .observation-item {
