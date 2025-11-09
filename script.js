@@ -595,7 +595,14 @@ function renderObservations() {
 
     list.innerHTML = '';
 
-    observations.forEach((obs, index) => {
+    // Ordenar observações por hora (crescente)
+    const sortedObservations = [...observations].sort((a, b) => {
+        return a.hora.localeCompare(b.hora);
+    });
+
+    sortedObservations.forEach((obs, index) => {
+        // Encontrar índice original para editar/deletar corretamente
+        const originalIndex = observations.findIndex(o => o.id === obs.id || (o.hora === obs.hora && o.timestamp === obs.timestamp));
         const item = document.createElement('div');
         item.className = 'observation-item';
 
@@ -610,8 +617,8 @@ function renderObservations() {
             <div class="obs-header">
                 <span class="obs-time">${obs.hora}</span>
                 <div class="obs-actions no-print">
-                    <button class="btn-icon" onclick="editObservation(${index})" title="Editar">✏️</button>
-                    <button class="btn-icon" onclick="deleteObservation(${index})" title="Remover">🗑️</button>
+                    <button class="btn-icon" onclick="editObservation(${originalIndex})" title="Editar">✏️</button>
+                    <button class="btn-icon" onclick="deleteObservation(${originalIndex})" title="Remover">🗑️</button>
                 </div>
             </div>
             <div class="obs-data">
