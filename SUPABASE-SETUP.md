@@ -166,6 +166,60 @@ supabase-config.js
    - Clique em **"observations"**
    - Veja os dados salvos
 
+## ✏️ Editor de Dados de Geração
+
+A aplicação inclui uma página dedicada para editar dados de geração (PDP e Geração):
+
+### Como Usar o Editor
+
+1. **Acessar o Editor:**
+   - Na página principal, clique no botão **"✏️ Editar Dados"** no cabeçalho
+   - Ou acesse diretamente `editor.html`
+
+2. **Carregar Dados:**
+   - Selecione a data no campo "Data"
+   - Clique em **"Carregar do Supabase"** para carregar dados existentes
+   - Ou clique em **"Gerar 48 Linhas"** para criar estrutura padrão (00:00-23:30)
+
+3. **Editar Valores:**
+   - Clique nos campos **PDP** ou **Geração** para editar
+   - Digite o novo valor
+   - Pressione **Enter** para salvar ou **Esc** para cancelar
+   - O desvio é calculado automaticamente (Geração - PDP)
+
+4. **Indicadores de Status:**
+   - 🟢 **Salvo**: Dados sincronizados com Supabase
+   - 🟡 **Modificado**: Dados editados mas não salvos
+   - ⚪ **Novo**: Dados criados mas não salvos
+
+5. **Salvar no Supabase:**
+   - Clique em **"Salvar no Supabase"** para persistir todas as alterações
+   - Os dados anteriores da mesma data serão substituídos
+
+6. **Limpar Geração:**
+   - Clique em **"Limpar Geração"** para remover apenas valores de geração
+   - Os valores de PDP são mantidos
+
+7. **Voltar:**
+   - Clique em **"← Voltar"** para retornar à página principal
+   - A página principal carregará automaticamente os dados salvos
+
+### Fluxo de Trabalho Recomendado
+
+1. Acesse o editor
+2. Selecione a data desejada
+3. Gere 48 linhas ou carregue dados existentes
+4. Edite os valores de PDP e Geração conforme necessário
+5. Salve no Supabase
+6. Volte para a página principal para visualizar gráficos e análises
+
+### Notas Importantes
+
+- Dados são organizados por data (`report_date`)
+- Cada combinação de hora + data é única
+- Ao salvar, todos os dados da data são substituídos
+- Edições não salvas serão perdidas ao mudar de data ou sair da página
+
 ## 🌐 Deploy na Vercel
 
 ### Opção 1: Variáveis de Ambiente (Recomendado)

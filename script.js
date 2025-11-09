@@ -325,6 +325,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     document.getElementById('fileInput').addEventListener('change', handleFileUpload);
     document.getElementById('downloadTemplateBtn').addEventListener('click', downloadTemplate);
+    document.getElementById('editorBtn').addEventListener('click', () => {
+        window.location.href = 'editor.html';
+    });
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
     // Event Listeners - Observações

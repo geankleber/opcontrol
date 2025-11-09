@@ -1,0 +1,141 @@
+/* Estilos específicos para a página de edição */
+
+/* Tabela de Edição */
+.editor-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.editor-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+}
+
+.editor-table th {
+    background: #4facfe;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 2px solid #3a8cd6;
+}
+
+.editor-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.editor-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+/* Campos Editáveis */
+.editable {
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    min-height: 30px;
+    display: inline-block;
+    min-width: 80px;
+}
+
+.editable:hover {
+    background: #e3f2fd;
+    box-shadow: 0 0 0 2px #4facfe;
+}
+
+.editing {
+    background: white !important;
+    box-shadow: 0 0 0 2px #4facfe !important;
+}
+
+.editable-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 2px solid #4facfe;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    text-align: center;
+    outline: none;
+}
+
+/* Status Indicators */
+.status-indicator {
+    font-size: 1.2rem;
+}
+
+.status-saved {
+    color: #4caf50;
+}
+
+.status-modified {
+    color: #ff9800;
+}
+
+.status-new {
+    color: #9e9e9e;
+}
+
+/* Desvio Styling */
+.desvio-positive {
+    color: #4caf50;
+    font-weight: 600;
+}
+
+.desvio-negative {
+    color: #f44336;
+    font-weight: 600;
+}
+
+.desvio-zero {
+    color: #666;
+}
+
+/* Loading State */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4facfe;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .editor-table {
+        font-size: 0.75rem;
+    }
+
+    .editor-table th,
+    .editor-table td {
+        padding: 8px 4px;
+    }
+
+    .editable {
+        min-width: 60px;
+    }
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Dados - UHE Teles Pires</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="editor.css">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase Config -->
+    <script src="supabase-config.js"></script>
+    <script>
+        window.SUPABASE_CONFIG = {
+            url: 'https://shjbfriuqrwbnqochybz.supabase.co',
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoamJmcml1cXJ3Ym5xb2NoeWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI2OTM3MzksImV4cCI6MjA3ODI2OTczOX0.B7ruEe_2DVL1CTk6syi3vOB1BP05euhVYMTtBA1DJsM'
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header class="header">
+            <div style="flex: 1;">
+                <h1>Editor de Dados de Geração</h1>
+                <p style="color: #666; margin-top: 5px; font-size: 0.875rem;">
+                    Edite os dados de geração e PDP para a data selecionada
+                </p>
+            </div>
+            <div class="header-actions">
+                <button id="backBtn" class="btn btn-secondary">← Voltar</button>
+                <input type="date" id="reportDate" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.875rem; margin-left: 10px;">
+            </div>
+        </header>
+
+        <!-- Ações -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h2 style="margin: 0;">Dados de Geração <span id="dataCount" style="color: #666; font-size: 0.875rem;">(0 registros)</span></h2>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="loadBtn" class="btn btn-primary">Carregar do Supabase</button>
+                    <button id="saveBtn" class="btn btn-success">Salvar no Supabase</button>
+                    <button id="generateBtn" class="btn btn-secondary">Gerar 48 Linhas</button>
+                    <button id="clearBtn" class="btn btn-danger">Limpar Geração</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Edição -->
+        <div class="card">
+            <div style="max-height: 600px; overflow-y: auto;">
+                <table class="editor-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">Hora</th>
+                            <th style="width: 150px;">PDP (MW)</th>
+                            <th style="width: 150px;">Geração (MW)</th>
+                            <th style="width: 150px;">Desvio (MW)</th>
+                            <th style="width: 80px;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: #999;">
+                                Clique em "Carregar do Supabase" ou "Gerar 48 Linhas" para começar
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Instruções -->
+        <div class="card" style="background: #f0f7ff; border-left: 4px solid #4facfe;">
+            <h3 style="margin-top: 0; color: #2c3e50;">💡 Instruções</h3>
+            <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                <li><strong>Gerar 48 Linhas:</strong> Cria estrutura padrão (00:00-23:30) com PDP 1790 MW</li>
+                <li><strong>Editar:</strong> Clique nos campos PDP e Geração para editar (Enter para salvar)</li>
+                <li><strong>Limpar Geração:</strong> Remove apenas os valores de geração (mantém PDP)</li>
+                <li><strong>Salvar:</strong> Sincroniza todos os dados com o Supabase</li>
+                <li><strong>Desvio:</strong> Calculado automaticamente (Geração - PDP)</li>
+                <li><strong>Status:</strong> 🟢 Salvo | 🟡 Modificado | ⚪ Novo</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="editor.js"></script>
+</body>
+</html>
