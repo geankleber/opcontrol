@@ -54,3 +54,4 @@ coverage/
 # Screenshots temporários (mantenha apenas os finais)
 docs/screenshots/*.tmp.png
 docs/screenshots/*.draft.png
+supabase-config.js
