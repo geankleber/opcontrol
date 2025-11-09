@@ -535,6 +535,11 @@ body {
         margin-bottom: 15px;
     }
 
+    /* Permitir quebra de página no card de observações */
+    .observations-card {
+        page-break-inside: auto;
+    }
+
     /* Preservar cores dos KPIs */
     .kpi-card,
     .kpi-card::before,
