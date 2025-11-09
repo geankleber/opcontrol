@@ -236,6 +236,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     document.getElementById('obsFileInput').addEventListener('change', handleObsFileUpload);
     document.getElementById('downloadObsBtn').addEventListener('click', downloadObservations);
+    document.getElementById('deleteAllObsBtn').addEventListener('click', deleteAllObservations);
 
     // Event Listeners - Modal
     document.getElementById('closeModal').addEventListener('click', closeModal);
@@ -733,6 +734,48 @@ async function saveObservation() {
 function closeModal() {
     document.getElementById('obsModal').style.display = 'none';
     editingObsIndex = null;
+}
+
+async function deleteAllObservations() {
+    const count = observations.length;
+
+    if (count === 0) {
+        alert('Não há observações para excluir.');
+        return;
+    }
+
+    const reportDate = document.getElementById('reportDate').value;
+    const confirmMsg = `Deseja realmente excluir TODAS as ${count} observação(ões) da data ${reportDate}?\n\n⚠️ Esta ação não pode ser desfeita!`;
+
+    if (!confirm(confirmMsg)) {
+        return;
+    }
+
+    // Tentar deletar do Supabase
+    if (supabase) {
+        try {
+            const { error } = await supabase
+                .from('observations')
+                .delete()
+                .eq('report_date', reportDate);
+
+            if (error) {
+                throw error;
+            }
+
+            console.log(`✅ ${count} observação(ões) removida(s) do Supabase`);
+        } catch (error) {
+            console.error('Erro ao deletar observações:', error.message);
+            alert('Erro ao remover observações do servidor. Tente novamente.');
+            return;
+        }
+    }
+
+    // Limpar array local
+    observations = [];
+    renderObservations();
+
+    alert(`${count} observação(ões) excluída(s) com sucesso!`);
 }
 
 // ===========================
