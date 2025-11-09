@@ -44,6 +44,9 @@ build/
 .env.local
 .env.*.local
 
+# Supabase credentials
+supabase-config.js
+
 # Arquivos de teste
 coverage/
 .nyc_output/

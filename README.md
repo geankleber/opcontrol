@@ -77,6 +77,9 @@ Fornecer uma interface intuitiva e visual para:
 - Edição e remoção de observações
 - Export/import via Excel
 - Timestamp automático
+- **🆕 Persistência com Supabase**: Observações salvas permanentemente (opcional)
+- Organização por data
+- Sincronização automática
 
 ### 📄 Relatórios
 - Impressão otimizada com cores preservadas
@@ -216,6 +219,30 @@ O projeto já inclui arquivos de exemplo prontos:
 
 - **data.xlsx** - 48 linhas de dados (00:00-23:30)
 - **observacoes.xlsx** - 1 observação de exemplo
+
+### 🆕 Persistência de Observações (Opcional)
+
+Para salvar observações permanentemente com Supabase:
+
+**Início Rápido (5 minutos):**
+```bash
+# 1. Copie o template de configuração
+cp supabase-config.template.js supabase-config.js
+
+# 2. Configure suas credenciais do Supabase
+# Edite supabase-config.js com URL e key do projeto
+
+# 3. Pronto! As observações serão salvas automaticamente
+```
+
+**Documentação completa:**
+- 📖 [Guia Rápido](QUICKSTART-SUPABASE.md) - 5 minutos
+- 📖 [Setup Completo](SUPABASE-SETUP.md) - Detalhado
+
+**Funciona sem Supabase?**
+✅ Sim! A aplicação funciona perfeitamente sem configuração.
+- Observações ficam apenas na memória (perdidas ao recarregar)
+- Use export/import Excel como backup
 
 ---
 

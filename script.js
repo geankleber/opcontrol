@@ -6,6 +6,125 @@ let currentData = [];
 let observations = [];
 let mainChart = null;
 let editingObsIndex = null;
+let supabase = null;
+
+// ===========================
+// INICIALIZAR SUPABASE
+// ===========================
+
+function initSupabase() {
+    try {
+        if (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
+            const { createClient } = window.supabase;
+            supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+            console.log('✅ Supabase inicializado com sucesso');
+            return true;
+        } else {
+            console.warn('⚠️ Supabase não configurado. Usando armazenamento local. Veja SUPABASE-SETUP.md');
+            return false;
+        }
+    } catch (error) {
+        console.warn('⚠️ Erro ao inicializar Supabase:', error.message);
+        console.warn('Usando armazenamento local. Veja SUPABASE-SETUP.md');
+        return false;
+    }
+}
+
+// ===========================
+// PERSISTÊNCIA DE OBSERVAÇÕES
+// ===========================
+
+async function loadObservationsFromSupabase() {
+    if (!supabase) return false;
+
+    try {
+        const reportDate = document.getElementById('reportDate').value;
+        const { data, error } = await supabase
+            .from('observations')
+            .select('*')
+            .eq('report_date', reportDate)
+            .order('hora', { ascending: true });
+
+        if (error) throw error;
+
+        observations = data.map(obs => ({
+            id: obs.id,
+            hora: obs.hora,
+            geracao: obs.geracao,
+            pdp: obs.pdp,
+            desvio: obs.desvio,
+            texto: obs.texto,
+            timestamp: obs.timestamp
+        }));
+
+        console.log(`✅ ${observations.length} observação(ões) carregada(s) do Supabase`);
+        return true;
+    } catch (error) {
+        console.error('Erro ao carregar observações:', error.message);
+        return false;
+    }
+}
+
+async function saveObservationToSupabase(obs, isUpdate = false, obsId = null) {
+    if (!supabase) return false;
+
+    try {
+        const reportDate = document.getElementById('reportDate').value;
+        const dbObs = {
+            hora: obs.hora,
+            geracao: obs.geracao,
+            pdp: obs.pdp,
+            desvio: obs.desvio,
+            texto: obs.texto,
+            timestamp: obs.timestamp,
+            report_date: reportDate
+        };
+
+        if (isUpdate && obsId) {
+            // Atualizar observação existente
+            const { data, error } = await supabase
+                .from('observations')
+                .update(dbObs)
+                .eq('id', obsId)
+                .select();
+
+            if (error) throw error;
+            console.log('✅ Observação atualizada no Supabase');
+            return data[0];
+        } else {
+            // Inserir nova observação
+            const { data, error } = await supabase
+                .from('observations')
+                .insert([dbObs])
+                .select();
+
+            if (error) throw error;
+            console.log('✅ Observação salva no Supabase');
+            return data[0];
+        }
+    } catch (error) {
+        console.error('Erro ao salvar observação:', error.message);
+        return false;
+    }
+}
+
+async function deleteObservationFromSupabase(obsId) {
+    if (!supabase) return false;
+
+    try {
+        const { error } = await supabase
+            .from('observations')
+            .delete()
+            .eq('id', obsId);
+
+        if (error) throw error;
+        console.log('✅ Observação removida do Supabase');
+        return true;
+    } catch (error) {
+        console.error('Erro ao deletar observação:', error.message);
+        return false;
+    }
+}
 
 // ===========================
 // DADOS DE EXEMPLO
@@ -78,10 +197,25 @@ const defaultObservations = [
 // INICIALIZAÇÃO
 // ===========================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Inicializar Supabase
+    initSupabase();
+
+    // Inicializar data com data atual
+    initializeReportDate();
+
     // Carregar dados padrão
     currentData = [...defaultData];
-    observations = [...defaultObservations];
+
+    // Carregar observações do Supabase ou usar dados padrão
+    if (supabase) {
+        const loaded = await loadObservationsFromSupabase();
+        if (!loaded) {
+            observations = [...defaultObservations];
+        }
+    } else {
+        observations = [...defaultObservations];
+    }
 
     // Inicializar visualizações
     updateAllVisualizations();
@@ -117,10 +251,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event Listener - Data do relatório
-    document.getElementById('reportDate').addEventListener('change', updatePageTitleFromDate);
+    document.getElementById('reportDate').addEventListener('change', async () => {
+        updatePageTitleFromDate();
 
-    // Inicializar data com data atual
-    initializeReportDate();
+        // Recarregar observações quando a data mudar
+        if (supabase) {
+            await loadObservationsFromSupabase();
+            renderObservations();
+        }
+    });
 });
 
 // ===========================
@@ -516,14 +655,26 @@ function editObservation(index) {
     document.getElementById('obsTexto').focus();
 }
 
-function deleteObservation(index) {
+async function deleteObservation(index) {
     if (confirm('Deseja realmente remover esta observação?')) {
+        const obs = observations[index];
+
+        // Tentar deletar do Supabase
+        if (supabase && obs.id) {
+            const success = await deleteObservationFromSupabase(obs.id);
+            if (!success) {
+                alert('Erro ao remover observação do servidor. Tente novamente.');
+                return;
+            }
+        }
+
+        // Remover do array local
         observations.splice(index, 1);
         renderObservations();
     }
 }
 
-function saveObservation() {
+async function saveObservation() {
     const texto = document.getElementById('obsTexto').value.trim();
 
     if (!texto) {
@@ -540,10 +691,39 @@ function saveObservation() {
         timestamp: new Date().toISOString()
     };
 
-    if (editingObsIndex !== null) {
-        observations[editingObsIndex] = obs;
+    let savedObs = obs;
+
+    // Tentar salvar no Supabase
+    if (supabase) {
+        if (editingObsIndex !== null) {
+            // Atualizar observação existente
+            const existingObs = observations[editingObsIndex];
+            const result = await saveObservationToSupabase(obs, true, existingObs.id);
+            if (result) {
+                savedObs = { ...obs, id: existingObs.id };
+                observations[editingObsIndex] = savedObs;
+            } else {
+                alert('Erro ao atualizar observação no servidor.');
+                return;
+            }
+        } else {
+            // Inserir nova observação
+            const result = await saveObservationToSupabase(obs, false);
+            if (result) {
+                savedObs = { ...obs, id: result.id };
+                observations.push(savedObs);
+            } else {
+                alert('Erro ao salvar observação no servidor.');
+                return;
+            }
+        }
     } else {
-        observations.push(obs);
+        // Fallback: salvar apenas localmente
+        if (editingObsIndex !== null) {
+            observations[editingObsIndex] = obs;
+        } else {
+            observations.push(obs);
+        }
     }
 
     renderObservations();
