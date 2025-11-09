@@ -127,6 +127,95 @@ async function deleteObservationFromSupabase(obsId) {
 }
 
 // ===========================
+// PERSISTÊNCIA DE DADOS DE GERAÇÃO
+// ===========================
+
+async function loadGenerationDataFromSupabase() {
+    if (!supabase) return false;
+
+    try {
+        const reportDate = document.getElementById('reportDate').value;
+        const { data, error } = await supabase
+            .from('generation_data')
+            .select('*')
+            .eq('report_date', reportDate)
+            .order('hora', { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+            currentData = data.map(row => ({
+                id: row.id,
+                hora: row.hora,
+                pdp: row.pdp,
+                geracao: row.geracao
+            }));
+            console.log(`✅ ${currentData.length} registro(s) de geração carregado(s) do Supabase`);
+            return true;
+        }
+
+        return false;
+    } catch (error) {
+        console.error('Erro ao carregar dados de geração:', error.message);
+        return false;
+    }
+}
+
+async function saveGenerationDataToSupabase(reportDate, dataArray) {
+    if (!supabase) return false;
+
+    try {
+        // Primeiro, deletar dados existentes da data
+        const { error: deleteError } = await supabase
+            .from('generation_data')
+            .delete()
+            .eq('report_date', reportDate);
+
+        if (deleteError) throw deleteError;
+
+        // Preparar dados para inserção
+        const records = dataArray.map(d => ({
+            hora: d.hora,
+            pdp: d.pdp,
+            geracao: d.geracao !== null && d.geracao !== undefined ? d.geracao : null,
+            report_date: reportDate
+        }));
+
+        // Inserir novos dados
+        const { data, error } = await supabase
+            .from('generation_data')
+            .insert(records)
+            .select();
+
+        if (error) throw error;
+
+        console.log(`✅ ${records.length} registro(s) de geração salvo(s) no Supabase`);
+        return true;
+    } catch (error) {
+        console.error('Erro ao salvar dados de geração:', error.message);
+        return false;
+    }
+}
+
+async function updateGenerationRow(id, geracao) {
+    if (!supabase) return false;
+
+    try {
+        const { data, error } = await supabase
+            .from('generation_data')
+            .update({ geracao: geracao })
+            .eq('id', id)
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    } catch (error) {
+        console.error('Erro ao atualizar linha:', error.message);
+        return false;
+    }
+}
+
+// ===========================
 // DADOS DE EXEMPLO
 // ===========================
 
@@ -204,8 +293,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Inicializar data com data atual
     initializeReportDate();
 
-    // Carregar dados padrão
-    currentData = [...defaultData];
+    // Carregar dados de geração do Supabase ou usar dados padrão
+    if (supabase) {
+        const dataLoaded = await loadGenerationDataFromSupabase();
+        if (!dataLoaded) {
+            currentData = [...defaultData];
+        }
+    } else {
+        currentData = [...defaultData];
+    }
 
     // Carregar observações do Supabase ou usar dados padrão
     if (supabase) {
@@ -257,10 +353,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('reportDate').addEventListener('change', async () => {
         updatePageTitleFromDate();
 
-        // Recarregar observações quando a data mudar
+        // Recarregar dados quando a data mudar
         if (supabase) {
+            // Carregar dados de geração
+            const dataLoaded = await loadGenerationDataFromSupabase();
+            if (!dataLoaded) {
+                currentData = [...defaultData];
+            }
+
+            // Carregar observações
             await loadObservationsFromSupabase();
-            renderObservations();
+
+            // Atualizar todas as visualizações
+            updateAllVisualizations();
         }
     });
 });

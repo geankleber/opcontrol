@@ -62,6 +62,60 @@ USING (true);
 CREATE POLICY "Permitir deleção pública"
 ON observations FOR DELETE
 USING (true);
+
+-- ==================================================
+-- Criar tabela de dados de geração (data.xlsx)
+-- ==================================================
+
+CREATE TABLE generation_data (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  hora TEXT NOT NULL,
+  pdp NUMERIC NOT NULL,
+  geracao NUMERIC,
+  report_date DATE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(hora, report_date)
+);
+
+-- Criar índice para busca rápida por data
+CREATE INDEX idx_generation_data_report_date ON generation_data(report_date);
+
+-- Criar índice para busca por hora
+CREATE INDEX idx_generation_data_hora ON generation_data(hora);
+
+-- Habilitar Row Level Security (RLS)
+ALTER TABLE generation_data ENABLE ROW LEVEL SECURITY;
+
+-- Políticas para generation_data
+CREATE POLICY "Permitir leitura pública generation_data"
+ON generation_data FOR SELECT
+USING (true);
+
+CREATE POLICY "Permitir inserção pública generation_data"
+ON generation_data FOR INSERT
+WITH CHECK (true);
+
+CREATE POLICY "Permitir atualização pública generation_data"
+ON generation_data FOR UPDATE
+USING (true);
+
+CREATE POLICY "Permitir deleção pública generation_data"
+ON generation_data FOR DELETE
+USING (true);
+
+-- Trigger para atualizar updated_at automaticamente
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_generation_data_updated_at BEFORE UPDATE
+ON generation_data FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
 ```
 
 4. Clique em **"Run"** (ou pressione Ctrl+Enter)
