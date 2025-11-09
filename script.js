@@ -192,20 +192,25 @@ function isDentroFaixa(geracao, pdp) {
 function calculateAnalytics() {
     if (currentData.length === 0) return;
 
+    // Filtrar apenas dados com geração válida
+    const validData = currentData.filter(d => d.geracao !== null && d.geracao !== undefined);
+
+    if (validData.length === 0) return;
+
     // Desvio médio
-    const desvios = currentData.map(d => d.geracao - d.pdp);
+    const desvios = validData.map(d => d.geracao - d.pdp);
     const desvioMedio = desvios.reduce((a, b) => a + b, 0) / desvios.length;
 
     // Pico de geração
-    const picoData = currentData.reduce((max, d) =>
+    const picoData = validData.reduce((max, d) =>
         d.geracao > max.geracao ? d : max
     );
 
     // Eficiência (dentro da faixa baseada nas novas regras)
-    const dentroFaixa = currentData.filter(d =>
+    const dentroFaixa = validData.filter(d =>
         isDentroFaixa(d.geracao, d.pdp)
     ).length;
-    const eficiencia = (dentroFaixa / currentData.length) * 100;
+    const eficiencia = (dentroFaixa / validData.length) * 100;
 
     // Atualizar KPIs
     const desvioMedioEl = document.getElementById('desvioMedio');
@@ -235,7 +240,7 @@ function calculatePeriodStats() {
     periods.forEach(period => {
         const periodData = currentData.filter(d => {
             const hour = parseInt(d.hora.split(':')[0]);
-            return hour >= period.start && hour < period.end;
+            return hour >= period.start && hour < period.end && d.geracao !== null && d.geracao !== undefined;
         });
 
         if (periodData.length > 0) {
@@ -273,8 +278,9 @@ function renderMainChart() {
     const geracaoData = currentData.map(d => d.geracao);
     const pdpData = currentData.map(d => d.pdp);
 
-    // Calcular valor máximo das séries + 5%
-    const maxGeracao = Math.max(...geracaoData);
+    // Calcular valor máximo das séries + 5% (apenas valores válidos)
+    const validGeracaoData = geracaoData.filter(v => v !== null && v !== undefined);
+    const maxGeracao = validGeracaoData.length > 0 ? Math.max(...validGeracaoData) : 0;
     const maxPdp = Math.max(...pdpData);
     const maxValue = Math.max(maxGeracao, maxPdp);
     const yMax = maxValue * 1.05; // 5% a mais
@@ -381,6 +387,11 @@ function renderHeatmap() {
     heatmap.innerHTML = '';
 
     currentData.forEach((d, index) => {
+        // Pular células sem geração
+        if (d.geracao === null || d.geracao === undefined) {
+            return;
+        }
+
         const desvio = d.geracao - d.pdp;
         const cell = document.createElement('div');
         cell.className = 'heatmap-cell';
@@ -561,11 +572,16 @@ function handleFileUpload(e) {
             const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
             // Validar e processar dados
-            currentData = jsonData.map(row => ({
-                hora: row.hora || row.Hora || '',
-                pdp: parseFloat(row.pdp || row.PDP || 0),
-                geracao: parseFloat(row.geracao || row.Geracao || row.geração || row.Geração || 0)
-            }));
+            currentData = jsonData.map(row => {
+                const geracaoValue = row.geracao || row.Geracao || row.geração || row.Geração;
+                return {
+                    hora: row.hora || row.Hora || '',
+                    pdp: parseFloat(row.pdp || row.PDP || 0),
+                    geracao: geracaoValue !== undefined && geracaoValue !== null && geracaoValue !== ''
+                        ? parseFloat(geracaoValue)
+                        : null
+                };
+            });
 
             if (currentData.length === 0) {
                 alert('Nenhum dado válido encontrado no arquivo.');
