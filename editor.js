@@ -436,15 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Input file Excel
     document.getElementById('excelFileInput').addEventListener('change', handleExcelUpload);
 
-    // Botão Carregar do Supabase
-    document.getElementById('loadBtn').addEventListener('click', async () => {
-        const loaded = await loadDataFromSupabase(currentDate);
-        if (!loaded) {
-            alert('Nenhum dado encontrado para esta data. Clique em "Gerar 48 Linhas" para começar.');
-        }
-    });
-
-    // Botão Salvar no Supabase
+    // Botão Salvar
     document.getElementById('saveBtn').addEventListener('click', () => {
         saveDataToSupabase();
     });
@@ -462,14 +454,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('✅ 48 linhas geradas');
     });
 
-    // Botão Limpar Geração
+    // Botão Excluir Geração
     document.getElementById('clearBtn').addEventListener('click', () => {
         if (editorData.length === 0) {
             alert('Nenhum dado carregado');
             return;
         }
 
-        if (!confirm('Isso limpará apenas os valores de geração (PDP será mantido). Continuar?')) {
+        if (!confirm('Isso excluirá apenas os valores de geração (PDP será mantido). Continuar?')) {
             return;
         }
 
@@ -480,10 +472,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
 
         renderTable();
-        console.log('✅ Valores de geração limpos');
+        console.log('✅ Valores de geração excluídos');
     });
 
-    // Botão Excluir Data no Supabase
+    // Botão Excluir Tudo
     document.getElementById('deleteBtn').addEventListener('click', () => {
         deleteDataFromSupabase();
     });
