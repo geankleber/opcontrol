@@ -326,11 +326,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateAllVisualizations();
 
     // Event Listeners - Botões principais
-    document.getElementById('uploadBtn').addEventListener('click', () => {
-        document.getElementById('fileInput').click();
-    });
-
-    document.getElementById('fileInput').addEventListener('change', handleFileUpload);
     document.getElementById('downloadTemplateBtn').addEventListener('click', downloadTemplate);
     document.getElementById('editorBtn').addEventListener('click', () => {
         window.location.href = 'editor.html';
@@ -916,47 +911,6 @@ async function deleteAllObservations() {
 // ===========================
 // MANIPULAÇÃO DE EXCEL
 // ===========================
-
-function handleFileUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-
-            // Validar e processar dados
-            currentData = jsonData.map(row => {
-                const geracaoValue = row.geracao || row.Geracao || row.geração || row.Geração;
-                return {
-                    hora: row.hora || row.Hora || '',
-                    pdp: parseFloat(row.pdp || row.PDP || 0),
-                    geracao: geracaoValue !== undefined && geracaoValue !== null && geracaoValue !== ''
-                        ? parseFloat(geracaoValue)
-                        : null
-                };
-            });
-
-            if (currentData.length === 0) {
-                alert('Nenhum dado válido encontrado no arquivo.');
-                return;
-            }
-
-            updateAllVisualizations();
-            alert('Dados carregados com sucesso!');
-        } catch (error) {
-            alert('Erro ao ler o arquivo: ' + error.message);
-        }
-    };
-    reader.readAsArrayBuffer(file);
-
-    // Limpar input para permitir recarregar o mesmo arquivo
-    e.target.value = '';
-}
 
 function downloadTemplate() {
     const ws = XLSX.utils.json_to_sheet(currentData);
