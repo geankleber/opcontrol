@@ -661,7 +661,7 @@ body {
     .obs-header {
         display: flex;
         justify-content: flex-start;
-        align-items: center;
+        align-items: baseline;
         margin-bottom: 8px;
     }
 
@@ -669,6 +669,7 @@ body {
         font-weight: bold;
         color: #2c3e50;
         flex-shrink: 0;
+        line-height: 1.5;
     }
 
     .obs-data {
@@ -676,5 +677,6 @@ body {
         color: #666;
         margin-left: 15px;
         flex: 1;
+        line-height: 1.5;
     }
 }
