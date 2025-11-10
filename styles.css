@@ -540,6 +540,12 @@ body {
         page-break-inside: auto;
     }
 
+    /* Evitar quebra de página dentro de cada observação individual */
+    .observation-item {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
     /* Preservar cores dos KPIs */
     .kpi-card,
     .kpi-card::before,
