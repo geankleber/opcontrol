@@ -410,10 +410,18 @@ function showLoading(show) {
 // ===========================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar data com hoje
-    const today = new Date().toISOString().split('T')[0];
+    // Inicializar data com hoje (horário de Brasília)
+    const now = new Date();
+    const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+
+    const year = brasiliaTime.getFullYear();
+    const month = String(brasiliaTime.getMonth() + 1).padStart(2, '0');
+    const day = String(brasiliaTime.getDate()).padStart(2, '0');
+    const today = `${year}-${month}-${day}`;
+
     document.getElementById('reportDate').value = today;
     currentDate = today;
+    console.log(`📅 Data inicializada: ${today} (Horário de Brasília)`);
 
     // Botão Voltar
     document.getElementById('backBtn').addEventListener('click', () => {

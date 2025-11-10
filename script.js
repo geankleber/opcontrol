@@ -385,10 +385,18 @@ document.addEventListener('DOMContentLoaded', async function() {
 // ===========================
 
 function initializeReportDate() {
-    const today = new Date();
-    const dateStr = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    // Obter data atual no horário de Brasília (UTC-3)
+    const now = new Date();
+    const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+
+    const year = brasiliaTime.getFullYear();
+    const month = String(brasiliaTime.getMonth() + 1).padStart(2, '0');
+    const day = String(brasiliaTime.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+
     document.getElementById('reportDate').value = dateStr;
     updatePageTitleFromDate();
+    console.log(`📅 Data inicializada: ${dateStr} (Horário de Brasília)`);
 }
 
 function updatePageTitleFromDate() {
