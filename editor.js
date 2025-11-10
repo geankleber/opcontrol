@@ -146,6 +146,73 @@ async function saveDataToSupabase() {
     }
 }
 
+function handleExcelUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    showLoading(true);
+
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+        try {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+
+            // Pegar primeira planilha
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+            if (jsonData.length === 0) {
+                alert('Arquivo Excel vazio ou formato inválido');
+                showLoading(false);
+                return;
+            }
+
+            // Processar dados
+            editorData = jsonData.map(row => {
+                // Aceitar diferentes formatos de coluna (maiúscula/minúscula)
+                const hora = row.hora || row.Hora || row.HORA || '';
+                const pdp = row.pdp || row.PDP || row.Pdp || 0;
+                const geracao = row.geracao || row.Geracao || row.GERACAO || null;
+
+                return {
+                    hora: String(hora).trim(),
+                    pdp: parseFloat(pdp) || 0,
+                    geracao: geracao !== null && geracao !== undefined && geracao !== '' ? parseFloat(geracao) : null,
+                    status: 'new'
+                };
+            }).filter(row => row.hora); // Remover linhas sem hora
+
+            if (editorData.length === 0) {
+                alert('Nenhum dado válido encontrado. Certifique-se de que as colunas são: hora, pdp, geracao');
+                showLoading(false);
+                return;
+            }
+
+            console.log(`✅ ${editorData.length} registro(s) carregado(s) do Excel`);
+            renderTable();
+            showLoading(false);
+            alert(`✅ ${editorData.length} registros carregados com sucesso!\n\nAgora você pode editar e clicar em "Salvar no Supabase".`);
+
+        } catch (error) {
+            console.error('Erro ao processar Excel:', error);
+            alert('Erro ao processar arquivo Excel: ' + error.message);
+            showLoading(false);
+        }
+    };
+
+    reader.onerror = () => {
+        alert('Erro ao ler arquivo');
+        showLoading(false);
+    };
+
+    reader.readAsArrayBuffer(file);
+
+    // Limpar input para permitir recarregar o mesmo arquivo
+    e.target.value = '';
+}
+
 // ===========================
 // RENDERIZAÇÃO
 // ===========================
@@ -306,6 +373,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('backBtn').addEventListener('click', () => {
         window.location.href = 'index.html';
     });
+
+    // Botão Upload Excel
+    document.getElementById('uploadExcelBtn').addEventListener('click', () => {
+        document.getElementById('excelFileInput').click();
+    });
+
+    // Input file Excel
+    document.getElementById('excelFileInput').addEventListener('change', handleExcelUpload);
 
     // Botão Carregar do Supabase
     document.getElementById('loadBtn').addEventListener('click', async () => {

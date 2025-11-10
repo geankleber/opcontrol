@@ -6,6 +6,8 @@
     <title>Editor de Dados - UHE Teles Pires</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="editor.css">
+    <!-- SheetJS -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Supabase Config -->
@@ -40,10 +42,12 @@
                     <h2 style="margin: 0;">Dados de Geração <span id="dataCount" style="color: #666; font-size: 0.875rem;">(0 registros)</span></h2>
                 </div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="uploadExcelBtn" class="btn btn-primary">📁 Carregar .xlsx</button>
                     <button id="loadBtn" class="btn btn-primary">Carregar do Supabase</button>
                     <button id="saveBtn" class="btn btn-success">Salvar no Supabase</button>
                     <button id="generateBtn" class="btn btn-secondary">Gerar 48 Linhas</button>
                     <button id="clearBtn" class="btn btn-danger">Limpar Geração</button>
+                    <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
                 </div>
             </div>
         </div>
@@ -76,6 +80,7 @@
         <div class="card" style="background: #f0f7ff; border-left: 4px solid #4facfe;">
             <h3 style="margin-top: 0; color: #2c3e50;">💡 Instruções</h3>
             <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                <li><strong>Carregar .xlsx:</strong> Importa dados de um arquivo Excel (colunas: hora, pdp, geracao)</li>
                 <li><strong>Gerar 48 Linhas:</strong> Cria estrutura padrão (00:00-23:30) com PDP 1790 MW</li>
                 <li><strong>Editar:</strong> Clique nos campos PDP e Geração para editar (Enter para salvar)</li>
                 <li><strong>Limpar Geração:</strong> Remove apenas os valores de geração (mantém PDP)</li>
