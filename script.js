@@ -297,22 +297,29 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (supabase) {
         const dataLoaded = await loadGenerationDataFromSupabase();
         if (!dataLoaded) {
-            currentData = [...defaultData];
+            // Se Supabase disponível mas sem dados, usar array vazio
+            currentData = [];
+            console.log('ℹ️ Nenhum dado encontrado para a data atual. Use o editor para adicionar dados.');
         }
     } else {
+        // Se Supabase não configurado, usar dados padrão (exemplo)
         currentData = [...defaultData];
+        console.log('⚠️ Supabase não configurado. Usando dados de exemplo.');
     }
 
     // Carregar observações do Supabase ou usar dados padrão
     if (supabase) {
         const loaded = await loadObservationsFromSupabase();
         if (!loaded) {
-            observations = [...defaultObservations];
-            observations.sort((a, b) => a.hora.localeCompare(b.hora));
+            // Se Supabase disponível mas sem observações, usar array vazio
+            observations = [];
+            console.log('ℹ️ Nenhuma observação encontrada para a data atual.');
         }
     } else {
+        // Se Supabase não configurado, usar observações de exemplo
         observations = [...defaultObservations];
         observations.sort((a, b) => a.hora.localeCompare(b.hora));
+        console.log('⚠️ Supabase não configurado. Usando observações de exemplo.');
     }
 
     // Inicializar visualizações
