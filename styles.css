@@ -656,4 +656,25 @@ body {
     .btn-icon {
         display: none;
     }
+
+    /* Layout das observações na impressão */
+    .obs-header {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .obs-time {
+        font-weight: bold;
+        color: #2c3e50;
+        flex-shrink: 0;
+    }
+
+    .obs-data {
+        font-size: 0.875rem;
+        color: #666;
+        margin-left: 15px;
+        flex: 1;
+    }
 }
