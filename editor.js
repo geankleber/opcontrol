@@ -489,9 +489,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Event Listener - Data
-    document.getElementById('reportDate').addEventListener('change', (e) => {
+    document.getElementById('reportDate').addEventListener('change', async (e) => {
         currentDate = e.target.value;
         console.log('Data alterada para:', currentDate);
+
+        // Carregar dados automaticamente ao mudar a data
+        const loaded = await loadDataFromSupabase(currentDate);
+        if (!loaded) {
+            // Limpar tabela se não houver dados para esta data
+            editorData = [];
+            renderTable();
+            console.log('ℹ️ Nenhum dado encontrado para esta data.');
+        }
     });
 
     // Tentar carregar dados da data atual
