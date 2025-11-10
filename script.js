@@ -741,13 +741,13 @@ function renderObservations() {
         item.innerHTML = `
             <div class="obs-header">
                 <span class="obs-time">${obs.hora}</span>
+                <div class="obs-data">
+                    Geração: ${obs.geracao} MW | PDP: ${obs.pdp} MW | Desvio: ${desvioFormatted}
+                </div>
                 <div class="obs-actions no-print">
                     <button class="btn-icon" onclick="editObservation(${originalIndex})" title="Editar">✏️</button>
                     <button class="btn-icon" onclick="deleteObservation(${originalIndex})" title="Remover">🗑️</button>
                 </div>
-            </div>
-            <div class="obs-data">
-                Geração: ${obs.geracao} MW | PDP: ${obs.pdp} MW | Desvio: ${desvioFormatted}
             </div>
             <div class="obs-text">${obs.texto}</div>
             <div class="obs-timestamp">Registrado em: ${timestampStr}</div>
