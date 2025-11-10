@@ -146,6 +146,52 @@ async function saveDataToSupabase() {
     }
 }
 
+async function deleteDataFromSupabase() {
+    if (!supabase) {
+        alert('Supabase não disponível');
+        return;
+    }
+
+    if (!currentDate) {
+        alert('Selecione uma data primeiro');
+        return;
+    }
+
+    const confirmMsg = `⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!\n\nDeseja realmente EXCLUIR PERMANENTEMENTE todos os dados de ${formatDateBR(currentDate)} do Supabase?\n\nClique em OK para confirmar a exclusão.`;
+
+    if (!confirm(confirmMsg)) {
+        return;
+    }
+
+    // Confirmação dupla para ação destrutiva
+    if (!confirm('Tem certeza absoluta? Esta ação NÃO PODE ser desfeita!')) {
+        return;
+    }
+
+    showLoading(true);
+
+    try {
+        const { error } = await supabase
+            .from('generation_data')
+            .delete()
+            .eq('report_date', currentDate);
+
+        if (error) throw error;
+
+        // Limpar dados locais
+        editorData = [];
+        renderTable();
+
+        console.log(`✅ Dados de ${currentDate} excluídos do Supabase`);
+        alert(`✅ Todos os dados de ${formatDateBR(currentDate)} foram excluídos permanentemente do Supabase.`);
+        showLoading(false);
+    } catch (error) {
+        console.error('Erro ao excluir dados:', error.message);
+        alert('Erro ao excluir dados: ' + error.message);
+        showLoading(false);
+    }
+}
+
 function handleExcelUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -427,6 +473,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderTable();
         console.log('✅ Valores de geração limpos');
+    });
+
+    // Botão Excluir Data no Supabase
+    document.getElementById('deleteBtn').addEventListener('click', () => {
+        deleteDataFromSupabase();
     });
 
     // Event Listener - Data
