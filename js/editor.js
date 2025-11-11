@@ -259,6 +259,37 @@ function handleExcelUpload(e) {
     e.target.value = '';
 }
 
+function downloadExcel() {
+    if (editorData.length === 0) {
+        alert('Nenhum dado para exportar');
+        return;
+    }
+
+    if (!currentDate) {
+        alert('Selecione uma data primeiro');
+        return;
+    }
+
+    // Preparar dados para exportação (sem o campo status)
+    const exportData = editorData.map(row => ({
+        hora: row.hora,
+        pdp: row.pdp,
+        geracao: row.geracao !== null && row.geracao !== undefined ? row.geracao : ''
+    }));
+
+    // Criar planilha e workbook
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Dados');
+
+    // Nome do arquivo com a data
+    const fileName = `data_${currentDate}.xlsx`;
+
+    // Download
+    XLSX.writeFile(wb, fileName);
+    console.log(`✅ Arquivo ${fileName} exportado com sucesso`);
+}
+
 // ===========================
 // RENDERIZAÇÃO
 // ===========================
@@ -447,6 +478,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Input file Excel
     document.getElementById('excelFileInput').addEventListener('change', handleExcelUpload);
+
+    // Botão Download Excel
+    document.getElementById('downloadExcelBtn').addEventListener('click', downloadExcel);
 
     // Botão Salvar
     document.getElementById('saveBtn').addEventListener('click', () => {

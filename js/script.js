@@ -326,7 +326,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateAllVisualizations();
 
     // Event Listeners - Botões principais
-    document.getElementById('downloadTemplateBtn').addEventListener('click', downloadTemplate);
     document.getElementById('editorBtn').addEventListener('click', () => {
         const selectedDate = document.getElementById('reportDate').value;
         window.location.href = `pages/editor.html?date=${selectedDate}`;
@@ -924,13 +923,6 @@ async function deleteAllObservations() {
 // ===========================
 // MANIPULAÇÃO DE EXCEL
 // ===========================
-
-function downloadTemplate() {
-    const ws = XLSX.utils.json_to_sheet(currentData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Dados');
-    XLSX.writeFile(wb, 'data.xlsx');
-}
 
 function handleObsFileUpload(e) {
     const file = e.target.files[0];
