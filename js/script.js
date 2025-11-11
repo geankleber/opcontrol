@@ -328,7 +328,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Event Listeners - Botões principais
     document.getElementById('downloadTemplateBtn').addEventListener('click', downloadTemplate);
     document.getElementById('editorBtn').addEventListener('click', () => {
-        window.location.href = 'pages/editor.html';
+        const selectedDate = document.getElementById('reportDate').value;
+        window.location.href = `pages/editor.html?date=${selectedDate}`;
     });
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
