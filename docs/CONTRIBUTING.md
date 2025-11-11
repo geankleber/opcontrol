@@ -4,7 +4,7 @@ Obrigado por considerar contribuir com o **Monitor de Geração UHE Teles Pires*
 
 Este documento fornece diretrizes para contribuir com o projeto.
 
-## 📋 Índice
+## Índice
 
 - [Código de Conduta](#código-de-conduta)
 - [Como Posso Contribuir?](#como-posso-contribuir)
@@ -23,14 +23,14 @@ Este projeto adere a um Código de Conduta. Ao participar, você concorda em man
 
 ### Nossas Promessas
 
-- ✅ Ser respeitoso com todos os contribuidores
-- ✅ Aceitar críticas construtivas
-- ✅ Focar no que é melhor para a comunidade
-- ✅ Mostrar empatia com outros membros
+-  Ser respeitoso com todos os contribuidores
+-  Aceitar críticas construtivas
+-  Focar no que é melhor para a comunidade
+-  Mostrar empatia com outros membros
 
 ---
 
-## 🎯 Como Posso Contribuir?
+## Como Posso Contribuir?
 
 ### 🐛 Reportar Bugs
 
@@ -45,7 +45,7 @@ Encontrou um bug? Ajude-nos a melhorar:
    - Screenshots (se aplicável)
    - Ambiente (navegador, OS, versão)
 
-### 💡 Sugerir Features
+### Sugerir Features
 
 Tem uma ideia? Compartilhe:
 
@@ -57,7 +57,7 @@ Tem uma ideia? Compartilhe:
    - Alternativas consideradas
    - Impacto nos usuários
 
-### 📝 Melhorar Documentação
+### Melhorar Documentação
 
 - Corrigir erros de digitação
 - Adicionar exemplos
@@ -77,7 +77,7 @@ Veja [Processo de Desenvolvimento](#processo-de-desenvolvimento)
 
 ---
 
-## 🔄 Processo de Desenvolvimento
+## Processo de Desenvolvimento
 
 ### 1. Fork e Clone
 
@@ -213,11 +213,11 @@ function calculateAnalytics(data) {
 #### Boas Práticas JS
 
 ```javascript
-// ✅ BOM
+//  BOM
 const filteredData = data.filter(d => d.geracao > 1000);
 const average = values.reduce((a, b) => a + b) / values.length;
 
-// ❌ EVITAR
+//  EVITAR
 var x = [];  // Use const/let
 for (var i = 0; i < data.length; i++) {}  // Use forEach, map, filter
 ```
@@ -281,13 +281,13 @@ for (var i = 0; i < data.length; i++) {}  // Use forEach, map, filter
 #### Boas Práticas CSS
 
 ```css
-/* ✅ BOM */
+/*  BOM */
 .kpi-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     transition: transform 0.3s ease;
 }
 
-/* ❌ EVITAR */
+/*  EVITAR */
 .kpi-card {
     background: #667eea;  /* Usar gradientes quando possível */
     transition: all 0.3s;  /* Especificar propriedades */
@@ -299,7 +299,7 @@ for (var i = 0; i < data.length; i++) {}  // Use forEach, map, filter
 #### Semântica
 
 ```html
-<!-- ✅ BOM -->
+<!--  BOM -->
 <header class="header">
     <h1>Título</h1>
 </header>
@@ -312,7 +312,7 @@ for (var i = 0; i < data.length; i++) {}  // Use forEach, map, filter
     </section>
 </main>
 
-<!-- ❌ EVITAR -->
+<!--  EVITAR -->
 <div class="header">
     <div class="title">Título</div>
 </div>
@@ -377,15 +377,15 @@ git commit -m "docs(readme): adicionar seção de deployment"
 
 ### Boas Práticas
 
-- ✅ Usar presente do indicativo ("adiciona" não "adicionado")
-- ✅ Primeira letra minúscula
-- ✅ Sem ponto final
-- ✅ Máximo 50 caracteres no título
-- ✅ Corpo com máximo 72 caracteres por linha
+-  Usar presente do indicativo ("adiciona" não "adicionado")
+-  Primeira letra minúscula
+-  Sem ponto final
+-  Máximo 50 caracteres no título
+-  Corpo com máximo 72 caracteres por linha
 
 ---
 
-## 🔍 Pull Requests
+## Pull Requests
 
 ### Template
 
@@ -428,12 +428,12 @@ Relates to #456
 
 ### Dicas para Aprovação Rápida
 
-- ✅ PRs pequenos e focados
-- ✅ Descrição clara
-- ✅ Screenshots de mudanças visuais
-- ✅ Código bem comentado
-- ✅ Testes realizados
-- ✅ Sem mudanças desnecessárias
+-  PRs pequenos e focados
+-  Descrição clara
+-  Screenshots de mudanças visuais
+-  Código bem comentado
+-  Testes realizados
+-  Sem mudanças desnecessárias
 
 ---
 
@@ -471,7 +471,7 @@ Qualquer outra informação relevante
 
 ---
 
-## 💡 Sugerir Features
+## Sugerir Features
 
 ### Template de Issue
 
@@ -544,6 +544,6 @@ Obrigado por contribuir! Cada contribuição, por menor que seja, é valiosa.
 
 **[⬆ Voltar ao topo](#-guia-de-contribuição)**
 
-Feito com ❤️ pela comunidade
+Feito com ❤ pela comunidade
 
 </div>

@@ -18,7 +18,7 @@ Sistema web completo para monitoramento e análise do desempenho da geração de
 
 ---
 
-## 📋 Índice
+## Índice
 
 - [Sobre o Projeto](#-sobre-o-projeto)
 - [Características](#-características)
@@ -40,7 +40,7 @@ Sistema web completo para monitoramento e análise do desempenho da geração de
 
 ---
 
-## 🎯 Sobre o Projeto
+## Sobre o Projeto
 
 O **Monitor de Geração UHE Teles Pires** é uma aplicação web moderna desenvolvida para o Centro de Operação Integrada - Gestão Técnica (COI-GT) da Usina Hidrelétrica Teles Pires.
 
@@ -55,38 +55,38 @@ Fornecer uma interface intuitiva e visual para:
 
 ### Por que este projeto?
 
-- ✅ **Interface Moderna**: Design limpo e profissional
-- ✅ **Sem Servidor**: Roda 100% no navegador
-- ✅ **Portabilidade**: Funciona offline, sem internet
-- ✅ **Zero Instalação**: Sem backend ou banco de dados
-- ✅ **Excel Nativo**: Import/export direto de planilhas
-- ✅ **Responsivo**: Funciona em desktop, tablet e mobile
+-  **Interface Moderna**: Design limpo e profissional
+-  **Sem Servidor**: Roda 100% no navegador
+-  **Portabilidade**: Funciona offline, sem internet
+-  **Zero Instalação**: Sem backend ou banco de dados
+-  **Excel Nativo**: Import/export direto de planilhas
+-  **Responsivo**: Funciona em desktop, tablet e mobile
 
 ---
 
-## ✨ Características
+## Características
 
-### 📊 Análise de Dados
+### Análise de Dados
 - **KPIs em Tempo Real**: Desvio médio, pico de geração e eficiência
 - **Gráfico Interativo**: Visualização comparativa com Chart.js
 - **Heatmap de Desvios**: Identificação rápida de períodos críticos
 - **Análise por Período**: Estatísticas de madrugada, manhã, tarde e noite
 
-### 📝 Sistema de Observações
+### Sistema de Observações
 - Registro de eventos com contexto completo
 - Edição e remoção de observações
 - Export/import via Excel
 - Timestamp automático
-- **🆕 Persistência com Supabase**: Observações salvas permanentemente (opcional)
+- ** Persistência com Supabase**: Observações salvas permanentemente (opcional)
 - Organização por data
 - Sincronização automática
 
-### 📄 Relatórios
+### Relatórios
 - Impressão otimizada com cores preservadas
 - Layout profissional automático
 - Geração instantânea (window.print)
 
-### 💾 Gestão de Dados
+### Gestão de Dados
 - Upload de arquivos Excel (.xlsx, .xls)
 - Download de templates
 - Validação automática de dados
@@ -144,7 +144,7 @@ xdg-open index.html  # Linux
 ![Impressão](docs/screenshots/print.png)
 *Layout otimizado para impressão com cores preservadas*
 
-> **💡 Como gerar screenshots:**
+> ** Como gerar screenshots:**
 > ```bash
 > # 1. Abra index.html no navegador
 > # 2. Pressione F12 e ajuste para resolução desejada
@@ -170,14 +170,14 @@ xdg-open index.html  # Linux
 - **npm** (opcional) - Gerenciador de pacotes
 
 ### Navegadores Suportados
-- ✅ Chrome 90+
-- ✅ Firefox 88+
-- ✅ Safari 14+
-- ✅ Edge 90+
+-  Chrome 90+
+-  Firefox 88+
+-  Safari 14+
+-  Edge 90+
 
 ---
 
-## 🚀 Instalação
+## Instalação
 
 ### Opção 1: Uso Direto (Recomendado)
 
@@ -209,9 +209,9 @@ npx http-server -p 8000
 
 ### Requisitos Mínimos
 
-- ✅ Navegador moderno (Chrome, Firefox, Edge, Safari)
-- ✅ JavaScript habilitado
-- ✅ Conexão com internet (para CDN) ou bibliotecas locais
+-  Navegador moderno (Chrome, Firefox, Edge, Safari)
+-  JavaScript habilitado
+-  Conexão com internet (para CDN) ou bibliotecas locais
 
 ### Arquivos Excel Inclusos
 
@@ -220,7 +220,7 @@ O projeto já inclui arquivos de exemplo prontos:
 - **data.xlsx** - 48 linhas de dados (00:00-23:30)
 - **observacoes.xlsx** - 1 observação de exemplo
 
-### 🆕 Persistência de Observações (Opcional)
+### Persistência de Observações (Opcional)
 
 Para salvar observações permanentemente com Supabase:
 
@@ -240,7 +240,7 @@ cp supabase-config.template.js supabase-config.js
 - 📖 [Setup Completo](SUPABASE-SETUP.md) - Detalhado
 
 **Funciona sem Supabase?**
-✅ Sim! A aplicação funciona perfeitamente sem configuração.
+ Sim! A aplicação funciona perfeitamente sem configuração.
 - Observações ficam apenas na memória (perdidas ao recarregar)
 - Use export/import Excel como backup
 
@@ -248,7 +248,7 @@ cp supabase-config.template.js supabase-config.js
 
 ## 📖 Como Usar
 
-### 1️⃣ Inicialização
+### 1⃣ Inicialização
 
 Ao abrir `index.html`, o sistema carrega automaticamente:
 - 48 pontos de medição (intervalos de 30 minutos)
@@ -257,13 +257,13 @@ Ao abrir `index.html`, o sistema carrega automaticamente:
 - Evento de queda às 12:00 (993 MW)
 - 1 observação pré-registrada
 
-### 2️⃣ Carregar Seus Dados
+### 2⃣ Carregar Seus Dados
 
 #### Via Upload de Excel
 
 ```
 1. Prepare seu arquivo Excel com colunas: hora, pdp, geracao
-2. Clique em "📂 Carregar data.xlsx"
+2. Clique em " Carregar data.xlsx"
 3. Selecione seu arquivo
 4. Aguarde processamento
 5. Todas as visualizações serão atualizadas automaticamente
@@ -277,7 +277,7 @@ Ao abrir `index.html`, o sistema carrega automaticamente:
 | 00:30 | 1790 | 1792    |
 | ...   | ...  | ...     |
 
-### 3️⃣ Adicionar Observações
+### 3⃣ Adicionar Observações
 
 #### Método A: Clicando no Gráfico
 ```
@@ -295,43 +295,43 @@ Ao abrir `index.html`, o sistema carrega automaticamente:
 4. Clique em "Salvar"
 ```
 
-### 4️⃣ Gerenciar Observações
+### 4⃣ Gerenciar Observações
 
-- **Editar**: Clique no ícone ✏️
-- **Remover**: Clique no ícone 🗑️
-- **Exportar**: Botão "⬇️ Download Observações"
-- **Importar**: Botão "📂 Carregar Observações"
+- **Editar**: Clique no ícone 
+- **Remover**: Clique no ícone 
+- **Exportar**: Botão "⬇ Download Observações"
+- **Importar**: Botão " Carregar Observações"
 
-### 5️⃣ Gerar Relatório
+### 5⃣ Gerar Relatório
 
 ```
-1. Clique em "🖨️ Imprimir Relatório"
+1. Clique em " Imprimir Relatório"
 2. Configure impressora/PDF
 3. Verifique preview (cores preservadas)
 4. Imprima ou salve como PDF
 ```
 
-### 6️⃣ Download de Template
+### 6⃣ Download de Template
 
 ```
-1. Clique em "⬇️ Download data.xlsx"
+1. Clique em "⬇ Download data.xlsx"
 2. Arquivo com dados atuais será baixado
 3. Use como template para novos dados
 ```
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 opcontrol/
 │
-├── 📄 index.html                 # Aplicação principal
+├──  index.html                 # Aplicação principal
 ├── 🎨 styles.css                 # Estilos e design
-├── ⚙️  script.js                  # Lógica JavaScript
+├──   script.js                  # Lógica JavaScript
 ├── 📖 README.md                  # Este arquivo
 │
-├── 📊 Arquivos Excel
+├──  Arquivos Excel
 │   ├── data.xlsx                 # Dados de exemplo (48 linhas)
 │   └── observacoes.xlsx          # Observações de exemplo
 │
@@ -339,7 +339,7 @@ opcontrol/
 │   ├── generate-excel.html       # Gerador visual (navegador)
 │   └── generate-excel.js         # Gerador CLI (Node.js)
 │
-├── 📦 Dependências (opcional)
+├──  Dependências (opcional)
 │   ├── package.json              # Configuração npm
 │   ├── package-lock.json         # Lock de dependências
 │   └── node_modules/             # Módulos Node.js
@@ -366,17 +366,17 @@ opcontrol/
 
 ---
 
-## 📊 Formato dos Arquivos Excel
+## Formato dos Arquivos Excel
 
-### 📄 data.xlsx - Dados de Geração
+### data.xlsx - Dados de Geração
 
 #### Estrutura
 
 | Coluna | Tipo | Obrigatório | Descrição |
 |--------|------|-------------|-----------|
-| `hora` | String | ✅ | Horário no formato HH:MM (ex: 12:00) |
-| `pdp` | Número | ✅ | Potência Disponível Programada em MW |
-| `geracao` | Número | ✅ | Geração Real em MW |
+| `hora` | String |  | Horário no formato HH:MM (ex: 12:00) |
+| `pdp` | Número |  | Potência Disponível Programada em MW |
+| `geracao` | Número |  | Geração Real em MW |
 
 #### Exemplo
 
@@ -391,17 +391,17 @@ hora    pdp     geracao
 
 #### Regras de Validação
 
-- ✅ Horário válido (00:00 a 23:59)
-- ✅ Valores numéricos positivos
-- ✅ Separador decimal: ponto (.) ou vírgula (,)
-- ✅ Aceita variações de nome: `Hora`, `HORA`, `hora`
-- ✅ Mínimo: 1 registro
-- ✅ Recomendado: 48 registros (intervalos de 30 min)
+-  Horário válido (00:00 a 23:59)
+-  Valores numéricos positivos
+-  Separador decimal: ponto (.) ou vírgula (,)
+-  Aceita variações de nome: `Hora`, `HORA`, `hora`
+-  Mínimo: 1 registro
+-  Recomendado: 48 registros (intervalos de 30 min)
 
 #### Download do Template
 
 ```javascript
-// Via interface: Botão "⬇️ Download data.xlsx"
+// Via interface: Botão "⬇ Download data.xlsx"
 // Via código:
 const dados = [
     { hora: '00:00', pdp: 1790, geracao: 1785 },
@@ -411,18 +411,18 @@ const dados = [
 
 ---
 
-### 📝 observacoes.xlsx - Observações
+### observacoes.xlsx - Observações
 
 #### Estrutura
 
 | Coluna | Tipo | Obrigatório | Descrição |
 |--------|------|-------------|-----------|
-| `hora` | String | ✅ | Horário do evento (HH:MM) |
-| `geracao` | Número | ✅ | Valor de geração em MW |
-| `pdp` | Número | ✅ | Valor de PDP em MW |
-| `desvio` | Número | ✅ | Diferença (geracao - pdp) |
-| `texto` | String | ✅ | Descrição da observação |
-| `timestamp` | String | ✅ | ISO 8601 (2024-01-15T12:00:00.000Z) |
+| `hora` | String |  | Horário do evento (HH:MM) |
+| `geracao` | Número |  | Valor de geração em MW |
+| `pdp` | Número |  | Valor de PDP em MW |
+| `desvio` | Número |  | Diferença (geracao - pdp) |
+| `texto` | String |  | Descrição da observação |
+| `timestamp` | String |  | ISO 8601 (2024-01-15T12:00:00.000Z) |
 
 #### Exemplo
 
@@ -444,7 +444,7 @@ new Date().toISOString()
 
 ---
 
-### 🔧 Gerando Arquivos Excel de Exemplo
+### Gerando Arquivos Excel de Exemplo
 
 #### Método 1: Via Navegador (Sem instalação)
 
@@ -471,21 +471,21 @@ Output:
 ```
 🏭 UHE Teles Pires - Gerador de Arquivos Excel
 
-📊 Gerando data.xlsx...
-✅ data.xlsx criado com sucesso! (48 linhas)
-📝 Gerando observacoes.xlsx...
-✅ observacoes.xlsx criado com sucesso! (1 observação)
+ Gerando data.xlsx...
+ data.xlsx criado com sucesso! (48 linhas)
+ Gerando observacoes.xlsx...
+ observacoes.xlsx criado com sucesso! (1 observação)
 
-🎉 Todos os arquivos foram gerados com sucesso!
+ Todos os arquivos foram gerados com sucesso!
 ```
 
 ---
 
-## ⚙️ Funcionalidades Detalhadas
+## Funcionalidades Detalhadas
 
 ### 1. KPIs (Indicadores-chave de Performance)
 
-#### 📊 Desvio Médio
+#### Desvio Médio
 ```javascript
 // Cálculo
 const desvios = dados.map(d => Math.abs(d.geracao - d.pdp));
@@ -495,7 +495,7 @@ const media = desvios.reduce((a, b) => a + b) / desvios.length;
 - **Unidade**: MW
 - **Significado**: Diferença média entre real e programado
 
-#### ⚡ Pico de Geração
+#### Pico de Geração
 ```javascript
 // Cálculo
 const pico = dados.reduce((max, d) =>
@@ -558,8 +558,8 @@ const eficiencia = (dentroFaixa / dados.length) * 100;
 
 | Cor | Desvio | Significado |
 |-----|--------|-------------|
-| 🟢 Verde | ≤ 50 MW | Dentro do programado |
-| 🟡 Amarelo | 51-200 MW | Desvio moderado - atenção |
+|  Verde | ≤ 50 MW | Dentro do programado |
+|  Amarelo | 51-200 MW | Desvio moderado - atenção |
 | 🔴 Vermelho | > 200 MW | Desvio alto - crítico |
 
 #### Lógica
@@ -615,14 +615,14 @@ if (desvio <= 50) {
 
 #### Operações
 - ➕ **Adicionar**: Via gráfico ou heatmap
-- ✏️ **Editar**: Modifica observação existente
-- 🗑️ **Remover**: Deleta com confirmação
+-  **Editar**: Modifica observação existente
+-  **Remover**: Deleta com confirmação
 - 📥 **Importar**: Carrega de Excel
 - 📤 **Exportar**: Salva em Excel
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
 ### Opção 1: GitHub Pages (Grátis)
 
@@ -823,8 +823,8 @@ F12 → Console → Ver erro detalhado
 ```
 1. Usar Chrome ou Edge (melhor suporte)
 2. Configurações de impressão:
-   ✅ Gráficos de fundo: Ativado
-   ✅ Cores: Ativado
+    Gráficos de fundo: Ativado
+    Cores: Ativado
 3. Salvar como PDF primeiro
 4. Verificar configuração da impressora
 ```
@@ -920,15 +920,15 @@ git push origin feature/MinhaFuncionalidade
 
 ### Diretrizes
 
-- ✅ Código limpo e comentado
-- ✅ Seguir padrão ES6+
-- ✅ Testar em múltiplos navegadores
-- ✅ Atualizar documentação
-- ✅ Adicionar screenshots se UI
+-  Código limpo e comentado
+-  Seguir padrão ES6+
+-  Testar em múltiplos navegadores
+-  Atualizar documentação
+-  Adicionar screenshots se UI
 
 ---
 
-## 📄 Licença
+## Licença
 
 Este projeto está sob a licença **MIT**.
 
@@ -989,6 +989,6 @@ SOFTWARE.
 
 **[⬆ Voltar ao topo](#-uhe-teles-pires---monitor-de-geração)**
 
-Feito com ❤️ pela equipe **COI-GT UHE Teles Pires**
+Feito com ❤ pela equipe **COI-GT UHE Teles Pires**
 
 </div>

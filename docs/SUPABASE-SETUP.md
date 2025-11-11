@@ -1,12 +1,12 @@
-# 🔧 Configuração do Supabase
+# Configuração do Supabase
 
 Este guia explica como configurar o Supabase para persistência das observações.
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 - Conta no Supabase (gratuita): https://supabase.com
 
-## 🚀 Passo 1: Criar Projeto no Supabase
+## Passo 1: Criar Projeto no Supabase
 
 1. Acesse https://supabase.com e faça login
 2. Clique em **"New Project"**
@@ -17,7 +17,7 @@ Este guia explica como configurar o Supabase para persistência das observaçõe
 4. Clique em **"Create new project"**
 5. Aguarde ~2 minutos para o projeto ser criado
 
-## 🗄️ Passo 2: Criar Tabela
+## Passo 2: Criar Tabela
 
 1. No painel lateral, clique em **"SQL Editor"**
 2. Clique em **"New query"**
@@ -121,7 +121,7 @@ EXECUTE FUNCTION update_updated_at_column();
 4. Clique em **"Run"** (ou pressione Ctrl+Enter)
 5. Você verá "Success. No rows returned"
 
-## 🔑 Passo 3: Obter Credenciais
+## Passo 3: Obter Credenciais
 
 1. No painel lateral, clique em **"Project Settings"** (ícone de engrenagem)
 2. Clique em **"API"**
@@ -129,7 +129,7 @@ EXECUTE FUNCTION update_updated_at_column();
    - **Project URL** (ex: `https://abc123.supabase.co`)
    - **anon/public key** (começa com `eyJ...`)
 
-## 📝 Passo 4: Configurar Aplicação
+## Passo 4: Configurar Aplicação
 
 1. Crie um arquivo `supabase-config.js` na raiz do projeto:
 
@@ -144,9 +144,9 @@ const SUPABASE_CONFIG = {
 2. Substitua `https://SEU-PROJETO.supabase.co` pela sua **Project URL**
 3. Substitua `SUA-ANON-KEY-AQUI` pela sua **anon/public key**
 
-⚠️ **IMPORTANTE**: Adicione `supabase-config.js` ao `.gitignore` para não commitar suas credenciais!
+ **IMPORTANTE**: Adicione `supabase-config.js` ao `.gitignore` para não commitar suas credenciais!
 
-## 🔒 Passo 5: Configurar .gitignore
+## Passo 5: Configurar .gitignore
 
 Adicione ao `.gitignore`:
 
@@ -155,7 +155,7 @@ Adicione ao `.gitignore`:
 supabase-config.js
 ```
 
-## 📊 Passo 6: Verificar Funcionamento
+## Passo 6: Verificar Funcionamento
 
 1. Abra a aplicação no navegador
 2. Carregue um arquivo de dados
@@ -166,14 +166,14 @@ supabase-config.js
    - Clique em **"observations"**
    - Veja os dados salvos
 
-## ✏️ Editor de Dados de Geração
+## Editor de Dados de Geração
 
 A aplicação inclui uma página dedicada para editar dados de geração (PDP e Geração):
 
 ### Como Usar o Editor
 
 1. **Acessar o Editor:**
-   - Na página principal, clique no botão **"✏️ Editar Dados"** no cabeçalho
+   - Na página principal, clique no botão **" Editar Dados"** no cabeçalho
    - Ou acesse diretamente `editor.html`
 
 2. **Carregar Dados:**
@@ -188,8 +188,8 @@ A aplicação inclui uma página dedicada para editar dados de geração (PDP e 
    - O desvio é calculado automaticamente (Geração - PDP)
 
 4. **Indicadores de Status:**
-   - 🟢 **Salvo**: Dados sincronizados com Supabase
-   - 🟡 **Modificado**: Dados editados mas não salvos
+   -  **Salvo**: Dados sincronizados com Supabase
+   -  **Modificado**: Dados editados mas não salvos
    - ⚪ **Novo**: Dados criados mas não salvos
 
 5. **Salvar no Supabase:**
@@ -220,7 +220,7 @@ A aplicação inclui uma página dedicada para editar dados de geração (PDP e 
 - Ao salvar, todos os dados da data são substituídos
 - Edições não salvas serão perdidas ao mudar de data ou sair da página
 
-## 🌐 Deploy na Vercel
+## Deploy na Vercel
 
 ### Opção 1: Variáveis de Ambiente (Recomendado)
 
@@ -243,19 +243,19 @@ A aplicação inclui uma página dedicada para editar dados de geração (PDP e 
 
 Você pode deixar as credenciais hardcoded no código, já que a anon key é segura para uso público (RLS protege os dados).
 
-## 🔐 Segurança
+## Segurança
 
 **Observações importantes:**
 
-1. ✅ **anon/public key é SEGURA** para expor no frontend
-2. ✅ Row Level Security (RLS) protege os dados
-3. ⚠️ Atualmente, qualquer pessoa pode ler/escrever observações
-4. 🔒 Para adicionar autenticação:
+1.  **anon/public key é SEGURA** para expor no frontend
+2.  Row Level Security (RLS) protege os dados
+3.  Atualmente, qualquer pessoa pode ler/escrever observações
+4.  Para adicionar autenticação:
    - Modifique as políticas RLS
    - Adicione Supabase Auth
    - Apenas usuários autenticados podem editar
 
-## 📈 Próximos Passos (Opcional)
+## Próximos Passos (Opcional)
 
 ### Adicionar Autenticação
 
@@ -286,7 +286,7 @@ async function migrateToSupabase() {
 }
 ```
 
-## 🆘 Troubleshooting
+## Troubleshooting
 
 ### Erro: "row-level security policy"
 - Verifique se executou as políticas RLS no SQL
@@ -300,13 +300,13 @@ async function migrateToSupabase() {
 - Procure por erros
 - Verifique no Table Editor do Supabase se os dados estão lá
 
-## 📚 Recursos
+## Recursos
 
 - [Documentação Supabase](https://supabase.com/docs)
 - [Supabase JavaScript Client](https://supabase.com/docs/reference/javascript)
 - [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security)
 
-## ✅ Verificação Final
+## Verificação Final
 
 - [ ] Projeto Supabase criado
 - [ ] Tabela `observations` criada
@@ -319,7 +319,7 @@ async function migrateToSupabase() {
 
 ---
 
-💡 **Dica**: Use o plano gratuito do Supabase que oferece:
+ **Dica**: Use o plano gratuito do Supabase que oferece:
 - 500MB de storage
 - 2GB de bandwidth/mês
 - Ilimitadas operações de API

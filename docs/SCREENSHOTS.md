@@ -2,7 +2,7 @@
 
 Este guia ajuda você a criar screenshots profissionais para a documentação do projeto.
 
-## 🎯 Screenshots Necessários
+## Screenshots Necessários
 
 1. **main-interface.png** - Interface principal completa
 2. **kpis.png** - Seção de KPIs em destaque
@@ -46,7 +46,7 @@ Zoom: 100%
 4. Capturar screenshot
 ```
 
-## 📋 Checklist de Captura
+## Checklist de Captura
 
 ### 1. Interface Principal (main-interface.png)
 
@@ -212,7 +212,7 @@ modal.png
 print.png
 ```
 
-## 📦 Organização
+## Organização
 
 ```
 docs/
@@ -226,7 +226,7 @@ docs/
     └── print.png
 ```
 
-## ✅ Checklist Final
+## Checklist Final
 
 Antes de fazer commit:
 
@@ -238,7 +238,7 @@ Antes de fazer commit:
 - [ ] Sem informações sensíveis
 - [ ] Arquivos otimizados (<500KB cada)
 
-## 🚀 Comandos Rápidos
+## Comandos Rápidos
 
 ### Captura via DevTools
 
@@ -263,7 +263,7 @@ mv Screenshot\ 2.png kpis.png
 # ... etc
 ```
 
-## 📝 Notas
+## Notas
 
 - Prefira Chrome ou Edge para melhor renderização
 - Desabilite extensões que possam alterar aparência
@@ -273,14 +273,14 @@ mv Screenshot\ 2.png kpis.png
 
 ## 🎓 Exemplos
 
-### Screenshot Perfeito ✅
+### Screenshot Perfeito 
 - Alta resolução
 - Cores vibrantes
 - Bem enquadrado
 - Sem distrações
 - Otimizado
 
-### Screenshot Ruim ❌
+### Screenshot Ruim 
 - Baixa resolução
 - Cores desbotadas
 - Mal enquadrado

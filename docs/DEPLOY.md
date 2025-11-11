@@ -1,4 +1,4 @@
-# 🚀 Guia de Deploy - GitHub Pages
+# Guia de Deploy - GitHub Pages
 
 ## Opção Recomendada: GitHub Pages
 
@@ -35,7 +35,7 @@ git push -u origin main
 #### Opção A: Via Interface Web (Recomendado)
 
 1. Vá para o repositório no GitHub
-2. Clique em **Settings** (⚙️)
+2. Clique em **Settings** ()
 3. No menu lateral, clique em **Pages**
 4. Em **Source**, selecione:
    - Branch: `main`
@@ -71,11 +71,11 @@ gh run list
 
 ---
 
-## ⏱️ Tempo Total: ~5 minutos
+## ⏱ Tempo Total: ~5 minutos
 
 ---
 
-## 🔄 Atualizações Futuras
+## Atualizações Futuras
 
 Sempre que fizer alterações:
 
@@ -94,7 +94,7 @@ git push
 
 ---
 
-## 🌐 URL Final
+## URL Final
 
 Seu projeto estará disponível em:
 
@@ -108,7 +108,7 @@ https://seu-usuario.github.io/opcontrol/
 
 ---
 
-## 🎯 Domínio Personalizado (Opcional)
+## Domínio Personalizado (Opcional)
 
 ### Se quiser usar seu próprio domínio:
 
@@ -127,7 +127,7 @@ https://seu-usuario.github.io/opcontrol/
 
 ---
 
-## 📊 Monitoramento
+## Monitoramento
 
 ### Verificar Status do Site
 
@@ -161,12 +161,12 @@ GitHub Pages não oferece analytics nativamente. Opções:
 
 ---
 
-## 🔒 Segurança
+## Segurança
 
 ### HTTPS Automático
-✅ GitHub Pages ativa HTTPS automaticamente
-✅ Certificado SSL gratuito
-✅ Renovação automática
+ GitHub Pages ativa HTTPS automaticamente
+ Certificado SSL gratuito
+ Renovação automática
 
 ### Proteção CORS
 Se precisar permitir CORS:
@@ -231,7 +231,7 @@ Atualizar `index.html`:
 
 ---
 
-## 📈 Comparação com Outras Opções
+## Comparação com Outras Opções
 
 | Recurso | GitHub Pages | Netlify | Vercel | Servidor Próprio |
 |---------|--------------|---------|--------|------------------|
@@ -242,11 +242,11 @@ Atualizar `index.html`:
 | **Domínio Custom** | Sim | Sim | Sim | Sim |
 | **Uptime** | 99.9% | 99.9% | 99.9% | Depende |
 | **CDN Global** | Sim | Sim | Sim | Não |
-| **Ideal para** | ✅ Este projeto | Sites dinâmicos | Apps Next.js | Apps complexos |
+| **Ideal para** |  Este projeto | Sites dinâmicos | Apps Next.js | Apps complexos |
 
 ---
 
-## ✅ Checklist de Deploy
+## Checklist de Deploy
 
 Antes de fazer deploy:
 
@@ -259,11 +259,11 @@ Antes de fazer deploy:
 
 ---
 
-## 🎉 Pronto!
+## Pronto!
 
 Após seguir estes passos, seu projeto estará **online e acessível globalmente**!
 
-Compartilhe a URL com sua equipe! 🚀
+Compartilhe a URL com sua equipe! 
 
 ---
 
@@ -273,4 +273,4 @@ Problemas com deploy?
 
 - 📧 Email: suporte@exemplo.com
 - 💬 [GitHub Discussions](https://github.com/seu-usuario/opcontrol/discussions)
-- 📚 [GitHub Pages Docs](https://docs.github.com/pages)
+-  [GitHub Pages Docs](https://docs.github.com/pages)

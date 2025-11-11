@@ -2,20 +2,20 @@
 
 Sistema web para monitoramento e análise de geração de energia da UHE Teles Pires.
 
-## 🚀 Acesso Rápido
+## Acesso Rápido
 
-**🌐 Demo Online:** [https://geankleber.github.io/opcontrol/](https://geankleber.github.io/opcontrol/)
+**Demo Online:** [https://geankleber.github.io/opcontrol/](https://geankleber.github.io/opcontrol/)
 
-## 📋 Funcionalidades
+## Funcionalidades
 
-- 📊 **Visualização de Dados** - Gráficos, KPIs e heatmaps de geração
-- ✏️ **Editor de Dados** - Interface dedicada para edição de PDP e Geração
-- 💾 **Persistência** - Dados armazenados no Supabase
-- 📝 **Observações** - Sistema de registro de eventos
-- 🖨️ **Relatórios** - Impressão otimizada
-- 📱 **Responsivo** - Funciona em desktop e mobile
+- **Visualização de Dados** - Gráficos, KPIs e heatmaps de geração
+- **Editor de Dados** - Interface dedicada para edição de PDP e Geração
+- **Persistência** - Dados armazenados no Supabase
+- **Observações** - Sistema de registro de eventos
+- **Relatórios** - Impressão otimizada
+- **Responsivo** - Funciona em desktop e mobile
 
-## 🎯 Início Rápido
+## Início Rápido
 
 1. **Clone o repositório:**
    ```bash
@@ -32,7 +32,7 @@ Sistema web para monitoramento e análise de geração de energia da UHE Teles P
    open index.html
    ```
 
-## 📚 Documentação
+## Documentação
 
 - **[Documentação Completa](docs/README-FULL.md)** - Guia detalhado do projeto
 - **[Configuração do Supabase](docs/SUPABASE-SETUP.md)** - Setup passo a passo
@@ -40,7 +40,7 @@ Sistema web para monitoramento e análise de geração de energia da UHE Teles P
 - **[Deploy](docs/DEPLOY.md)** - Como fazer deploy
 - **[Contribuir](docs/CONTRIBUTING.md)** - Como contribuir
 
-## 🏗️ Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 opcontrol/
@@ -53,7 +53,7 @@ opcontrol/
 └── scripts/                # Scripts de deploy
 ```
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 - **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
 - **Gráficos:** Chart.js
@@ -61,14 +61,14 @@ opcontrol/
 - **Backend:** Supabase (PostgreSQL)
 - **Deploy:** GitHub Pages
 
-## 📄 Licença
+## Licença
 
 MIT License - veja [LICENSE](LICENSE) para detalhes
 
-## 👥 Contribuindo
+## Contribuindo
 
 Contribuições são bem-vindas! Veja [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ---
 
-**Desenvolvido para UHE Teles Pires** | 🤖 Com assistência de [Claude Code](https://claude.com/claude-code)
+**Desenvolvido para UHE Teles Pires** | Com assistência de [Claude Code](https://claude.com/claude-code)
