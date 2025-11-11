@@ -381,18 +381,30 @@ document.addEventListener('DOMContentLoaded', async function() {
 // ===========================
 
 function initializeReportDate() {
-    // Obter data atual no horário de Brasília (UTC-3)
-    const now = new Date();
-    const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    // Verificar se há data na URL (vindo do editor)
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateFromUrl = urlParams.get('date');
 
-    const year = brasiliaTime.getFullYear();
-    const month = String(brasiliaTime.getMonth() + 1).padStart(2, '0');
-    const day = String(brasiliaTime.getDate()).padStart(2, '0');
-    const dateStr = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+    let dateStr;
+
+    if (dateFromUrl) {
+        // Usar data passada pela URL
+        dateStr = dateFromUrl;
+        console.log(`📅 Data recebida da URL: ${dateStr}`);
+    } else {
+        // Obter data atual no horário de Brasília (UTC-3)
+        const now = new Date();
+        const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+
+        const year = brasiliaTime.getFullYear();
+        const month = String(brasiliaTime.getMonth() + 1).padStart(2, '0');
+        const day = String(brasiliaTime.getDate()).padStart(2, '0');
+        dateStr = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+        console.log(`📅 Data inicializada: ${dateStr} (Horário de Brasília)`);
+    }
 
     document.getElementById('reportDate').value = dateStr;
     updatePageTitleFromDate();
-    console.log(`📅 Data inicializada: ${dateStr} (Horário de Brasília)`);
 }
 
 function updatePageTitleFromDate() {
