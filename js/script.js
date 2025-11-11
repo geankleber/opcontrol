@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Event Listeners - Botões principais
     document.getElementById('downloadTemplateBtn').addEventListener('click', downloadTemplate);
     document.getElementById('editorBtn').addEventListener('click', () => {
-        window.location.href = 'editor.html';
+        window.location.href = 'pages/editor.html';
     });
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 

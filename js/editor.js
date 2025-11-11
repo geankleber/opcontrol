@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Botão Voltar
     document.getElementById('backBtn').addEventListener('click', () => {
-        window.location.href = 'index.html';
+        window.location.href = '../index.html';
     });
 
     // Botão Upload Excel

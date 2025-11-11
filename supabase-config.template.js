@@ -3,9 +3,9 @@
 // ===========================
 //
 // INSTRUÇÕES:
-// 1. Copie este arquivo para: supabase-config.js
+// 1. Copie este arquivo para: js/supabase-config.js
 // 2. Substitua os valores abaixo pelas suas credenciais do Supabase
-// 3. Veja instruções completas em: SUPABASE-SETUP.md
+// 3. Veja instruções completas em: docs/SUPABASE-SETUP.md
 
 const SUPABASE_CONFIG = {
     url: 'https://SEU-PROJETO.supabase.co',
