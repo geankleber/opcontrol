@@ -679,4 +679,232 @@ body {
         flex: 1;
         line-height: 1.5;
     }
+
+    /* Estilos do Controle de Geração para impressão */
+    .control-item {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .control-actions,
+    .control-header-section .no-print {
+        display: none;
+    }
+
+    .control-responsavel {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+    }
+}
+
+/* ===========================
+   CONTROLE DA GERAÇÃO
+   =========================== */
+
+/* Cabeçalho do Controle de Geração */
+.control-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.control-header-section h2 {
+    margin: 0;
+}
+
+.control-count {
+    font-size: 0.875rem;
+    color: #666;
+    font-weight: normal;
+}
+
+.control-header-section > div {
+    display: flex;
+    gap: 10px;
+}
+
+/* Lista de Controles */
+.controls-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.control-item {
+    background: #f0f7ff;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid #4facfe;
+}
+
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.control-time-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.control-hora {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.control-setpoint {
+    color: #4facfe;
+    font-size: 0.875rem;
+}
+
+.control-setpoint strong {
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.control-responsavel {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.responsavel-ons {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.responsavel-axia {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.control-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.control-detalhe {
+    color: #555;
+    line-height: 1.5;
+    padding: 10px;
+    background: white;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 0.875rem;
+}
+
+.control-timestamp {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 8px;
+}
+
+/* Estilos do formulário */
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: #4facfe;
+}
+
+/* Radio buttons group */
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.radio-option:hover {
+    border-color: #4facfe;
+    background-color: #f0f7ff;
+}
+
+.radio-option input[type="radio"] {
+    margin: 0;
+    margin-right: 8px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.radio-option input[type="radio"]:checked + .radio-label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+    border-color: #4facfe;
+    background-color: #e6f4ff;
+    box-shadow: 0 2px 8px rgba(79, 172, 254, 0.2);
+}
+
+.radio-label {
+    cursor: pointer;
+    user-select: none;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Responsividade para Controle de Geração */
+@media (max-width: 768px) {
+    .control-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .control-time-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .control-responsavel {
+        align-self: flex-start;
+    }
+
+    .control-actions {
+        justify-content: flex-end;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .radio-option {
+        width: 100%;
+    }
 }

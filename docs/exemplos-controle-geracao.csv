@@ -1,0 +1,11 @@
+hora,setpoint,responsavel,detalhe
+00:30,1790,Axia Energia,Set-point padrão para operação de carga base na madrugada
+06:30,1850,ONS,Aumento de carga devido ao início da operação das indústrias na região
+08:15,1820,Axia Energia,Ajuste técnico para otimização da eficiência operacional
+10:45,1900,ONS,Atendimento ao pico de demanda do sistema interligado nacional
+12:00,1650,Axia Energia,Redução programada para manutenção preventiva na unidade geradora 2
+14:30,1790,Axia Energia,Retorno ao set-point normal após conclusão da manutenção preventiva
+16:00,1875,ONS,Aumento solicitado devido à indisponibilidade de outra usina no sistema
+17:30,1920,ONS,Máxima geração durante horário de ponta - alta demanda residencial
+20:00,1780,ONS,Redução após horário de ponta - normalização da demanda
+22:15,1750,ONS,Ajuste para operação de base durante período noturno

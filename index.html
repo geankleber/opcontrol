@@ -134,6 +134,21 @@
             </div>
             <div id="observationsList" class="observations-list"></div>
         </div>
+
+        <!-- Controle da Geração -->
+        <div class="card control-card">
+            <div class="control-header-section">
+                <h2>Controle da Geração <span id="controlsCount" class="control-count">(0)</span></h2>
+                <div class="no-print">
+                    <button id="addControlBtn" class="btn btn-sm btn-primary">➕ Adicionar Controle</button>
+                    <button id="uploadControlBtn" class="btn btn-sm btn-secondary">Carregar Excel</button>
+                    <button id="downloadControlBtn" class="btn btn-sm btn-secondary">Download Excel</button>
+                    <button id="deleteAllControlBtn" class="btn btn-sm btn-danger">Excluir Todos</button>
+                    <input type="file" id="controlFileInput" accept=".xlsx,.xls" style="display: none;">
+                </div>
+            </div>
+            <div id="generationControlsList" class="controls-list"></div>
+        </div>
     </div>
 
     <!-- Modal de Observação -->
@@ -172,6 +187,48 @@
         </div>
     </div>
 
+    <!-- Modal de Controle da Geração -->
+    <div id="controlModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="controlModalTitle">Adicionar Controle da Geração</h2>
+                <button class="modal-close" id="closeControlModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><span style="color: red;">*</span> Hora:</label>
+                    <input type="time" id="controlHora" required>
+                </div>
+                <div class="form-group">
+                    <label><span style="color: red;">*</span> Set-point (MW):</label>
+                    <input type="number" id="controlSetpoint" step="1" placeholder="Ex: 1790" required>
+                </div>
+                <div class="form-group">
+                    <label><span style="color: red;">*</span> Responsável:</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="controlResponsavel" value="ONS" checked>
+                            <span class="radio-label">🏢 ONS</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="controlResponsavel" value="Axia Energia">
+                            <span class="radio-label">⚡ Axia Energia</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Detalhe:</label>
+                    <textarea id="controlDetalhe" rows="4" placeholder="Detalhamento da solicitação (opcional)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelControlBtn" class="btn btn-secondary">Cancelar</button>
+                <button id="saveControlBtn" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/generation-control.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>

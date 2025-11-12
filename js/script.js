@@ -322,6 +322,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.log('⚠️ Supabase não configurado. Usando observações de exemplo.');
     }
 
+    // Carregar controles de geração do Supabase
+    if (supabase) {
+        await loadGenerationControlsFromSupabase();
+    } else {
+        generationControls = [];
+    }
+
     // Inicializar visualizações
     updateAllVisualizations();
 
@@ -341,16 +348,35 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('downloadObsBtn').addEventListener('click', downloadObservations);
     document.getElementById('deleteAllObsBtn').addEventListener('click', deleteAllObservations);
 
-    // Event Listeners - Modal
+    // Event Listeners - Modal de Observações
     document.getElementById('closeModal').addEventListener('click', closeModal);
     document.getElementById('cancelObsBtn').addEventListener('click', closeModal);
     document.getElementById('saveObsBtn').addEventListener('click', saveObservation);
 
-    // Fechar modal ao clicar fora
+    // Event Listeners - Controle da Geração
+    document.getElementById('addControlBtn').addEventListener('click', openGenerationControlModal);
+    document.getElementById('uploadControlBtn').addEventListener('click', () => {
+        document.getElementById('controlFileInput').click();
+    });
+    document.getElementById('controlFileInput').addEventListener('change', handleControlFileUpload);
+    document.getElementById('downloadControlBtn').addEventListener('click', downloadGenerationControls);
+    document.getElementById('deleteAllControlBtn').addEventListener('click', deleteAllGenerationControls);
+
+    // Event Listeners - Modal de Controle
+    document.getElementById('closeControlModal').addEventListener('click', closeGenerationControlModal);
+    document.getElementById('cancelControlBtn').addEventListener('click', closeGenerationControlModal);
+    document.getElementById('saveControlBtn').addEventListener('click', saveGenerationControl);
+
+    // Fechar modais ao clicar fora
     window.addEventListener('click', (e) => {
-        const modal = document.getElementById('obsModal');
-        if (e.target === modal) {
+        const obsModal = document.getElementById('obsModal');
+        const controlModal = document.getElementById('controlModal');
+
+        if (e.target === obsModal) {
             closeModal();
+        }
+        if (e.target === controlModal) {
+            closeGenerationControlModal();
         }
     });
 
@@ -368,6 +394,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // Carregar observações
             await loadObservationsFromSupabase();
+
+            // Carregar controles de geração
+            await loadGenerationControlsFromSupabase();
 
             // Atualizar todas as visualizações
             updateAllVisualizations();
@@ -990,4 +1019,5 @@ function updateAllVisualizations() {
     renderMainChart();
     renderHeatmap();
     renderObservations();
+    renderGenerationControls();
 }
