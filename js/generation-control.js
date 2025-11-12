@@ -557,18 +557,25 @@ function renderTimeline() {
         const offsetClass = offsetLevel === 1 ? 'timeline-event-offset-1' :
                            offsetLevel === 2 ? 'timeline-event-offset-2' : '';
 
+        // Classe do ponto baseada no responsável
+        const pointClass = ctrl.responsavel === 'ONS' ? 'timeline-point-ons' : 'timeline-point-axia';
+
         html += `
             <div class="timeline-event ${offsetClass}" style="left: ${percentage}%">
-                <div class="timeline-event-label">${ctrl.responsavel}</div>
                 <div class="timeline-event-time">${horaFormatada}</div>
                 <div class="timeline-arrow-down"></div>
-                <div class="timeline-point"></div>
+                <div class="timeline-point ${pointClass}"></div>
                 <div class="timeline-event-value">${setpointFormatado} MW</div>
                 ${ctrl.detalhe ? `
                     <div class="timeline-event-detail">
+                        <strong>${ctrl.responsavel}</strong><br>
                         ${ctrl.detalhe}
                     </div>
-                ` : ''}
+                ` : `
+                    <div class="timeline-event-detail">
+                        <strong>${ctrl.responsavel}</strong>
+                    </div>
+                `}
             </div>
         `;
 
@@ -576,6 +583,14 @@ function renderTimeline() {
     });
 
     html += '</div>'; // timeline-line
+
+    // Legenda
+    html += '<div class="timeline-legend">';
+    html += '<span class="timeline-legend-label">Responsável:</span>';
+    html += '<div class="timeline-legend-item"><span class="timeline-legend-dot timeline-legend-dot-ons"></span> ONS</div>';
+    html += '<div class="timeline-legend-item"><span class="timeline-legend-dot timeline-legend-dot-axia"></span> Axia Energia</div>';
+    html += '</div>';
+
     html += '</div>'; // timeline-wrapper
 
     container.innerHTML = html;
