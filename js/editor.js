@@ -24,7 +24,17 @@ if (typeof window.SUPABASE_CONFIG !== 'undefined' && typeof window.supabase !== 
 
 function generateDefaultRows() {
     const rows = [];
-    for (let h = 0; h < 24; h++) {
+
+    // Começar de 00:30 (pular 00:00)
+    rows.push({
+        hora: '00:30',
+        pdp: 1790,
+        geracao: null,
+        status: 'new'
+    });
+
+    // Gerar de 01:00 até 23:30
+    for (let h = 1; h < 24; h++) {
         for (let m = 0; m < 60; m += 30) {
             const hora = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
             rows.push({
@@ -35,6 +45,15 @@ function generateDefaultRows() {
             });
         }
     }
+
+    // Adicionar 23:59 no final
+    rows.push({
+        hora: '23:59',
+        pdp: 1790,
+        geracao: null,
+        status: 'new'
+    });
+
     return rows;
 }
 
