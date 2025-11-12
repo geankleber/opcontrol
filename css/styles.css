@@ -809,12 +809,12 @@ body {
 }
 
 .responsavel-ons {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #475D16;
     color: white;
 }
 
 .responsavel-axia {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #0000FF;
     color: white;
 }
 
