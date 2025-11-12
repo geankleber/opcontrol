@@ -696,6 +696,30 @@ body {
         print-color-adjust: exact;
         color-adjust: exact;
     }
+
+    /* Timeline na impressão */
+    .timeline-container {
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .timeline-line {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .timeline-point {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .timeline-event-detail {
+        display: none;
+    }
 }
 
 /* ===========================
@@ -732,6 +756,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
 }
 
 .control-item {
@@ -878,6 +905,226 @@ body {
     color: #555;
 }
 
+/* ===========================
+   LINHA DO TEMPO
+   =========================== */
+
+.timeline-container {
+    margin: 15px 0;
+    padding: 15px 20px;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 8px;
+    min-height: 120px;
+}
+
+.timeline-wrapper {
+    position: relative;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.timeline-title {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0 0 80px 0;
+}
+
+.timeline-line {
+    position: relative;
+    height: 4px;
+    background: linear-gradient(to right, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 30px 0 40px 0;
+}
+
+.timeline-start-time,
+.timeline-end-time {
+    position: absolute;
+    top: 10px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.timeline-start-time {
+    left: 0;
+}
+
+.timeline-end-time {
+    right: 0;
+}
+
+.timeline-event {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.timeline-event:hover {
+    transform: translateX(-50%) scale(1.05);
+}
+
+/* Nível 1 de offset - sobe moderadamente */
+.timeline-event-offset-1 .timeline-event-label {
+    top: -52px;
+}
+
+.timeline-event-offset-1 .timeline-event-time {
+    top: -36px;
+}
+
+.timeline-event-offset-1 .timeline-event-value {
+    top: 38px;
+}
+
+/* Nível 2 de offset - sobe mais ainda */
+.timeline-event-offset-2 .timeline-event-label {
+    top: -66px;
+}
+
+.timeline-event-offset-2 .timeline-event-time {
+    top: -50px;
+}
+
+.timeline-event-offset-2 .timeline-event-value {
+    top: 50px;
+}
+
+.timeline-point {
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: 3px solid #ff6b35;
+    border-radius: 50%;
+    margin: 0 auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.timeline-event:hover .timeline-point {
+    background: #ff6b35;
+    transform: translateX(-50%) scale(1.2);
+}
+
+.timeline-arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid #666;
+    margin: 0 auto;
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.timeline-event-label {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #666;
+    white-space: nowrap;
+    font-weight: 500;
+    position: absolute;
+    top: -38px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.timeline-event-time {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #2c3e50;
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.timeline-event-value {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #ff6b35;
+    font-weight: bold;
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.timeline-event-detail {
+    position: absolute;
+    top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+    font-size: 0.7rem;
+    color: #666;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+    max-width: 200px;
+}
+
+.timeline-event:hover .timeline-event-detail {
+    opacity: 1;
+}
+
+.timeline-event-detail::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid white;
+}
+
+.timeline-event-responsavel {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.timeline-responsavel-ons {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.timeline-responsavel-axia {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.timeline-empty {
+    text-align: center;
+    color: #999;
+    padding: 30px 20px;
+    font-size: 0.875rem;
+}
+
 /* Responsividade para Controle de Geração */
 @media (max-width: 768px) {
     .control-header {
@@ -906,5 +1153,60 @@ body {
 
     .radio-option {
         width: 100%;
+    }
+
+    .timeline-container {
+        padding: 15px 10px;
+    }
+
+    .timeline-wrapper {
+        padding: 0;
+        margin-top: 10px;
+    }
+
+    .timeline-title {
+        font-size: 1rem;
+        margin-bottom: 70px;
+    }
+
+    .timeline-line {
+        margin: 30px 0 40px 0;
+    }
+
+    .timeline-event-time {
+        font-size: 0.7rem;
+    }
+
+    .timeline-event-label {
+        font-size: 0.65rem;
+    }
+
+    .timeline-event-value {
+        font-size: 0.7rem;
+    }
+
+    /* Offsets para mobile */
+    .timeline-event-offset-1 .timeline-event-label {
+        top: -48px;
+    }
+
+    .timeline-event-offset-1 .timeline-event-time {
+        top: -34px;
+    }
+
+    .timeline-event-offset-1 .timeline-event-value {
+        top: 36px;
+    }
+
+    .timeline-event-offset-2 .timeline-event-label {
+        top: -60px;
+    }
+
+    .timeline-event-offset-2 .timeline-event-time {
+        top: -46px;
+    }
+
+    .timeline-event-offset-2 .timeline-event-value {
+        top: 46px;
     }
 }

@@ -121,20 +121,6 @@
             </table>
         </div>
 
-        <!-- Sistema de Observações -->
-        <div class="card observations-card">
-            <div class="observations-header">
-                <h2>Observações <span id="obsCount" class="obs-count">(0)</span></h2>
-                <div class="no-print">
-                    <button id="uploadObsBtn" class="btn btn-sm btn-secondary">Carregar Observações</button>
-                    <button id="downloadObsBtn" class="btn btn-sm btn-secondary">Download Observações</button>
-                    <button id="deleteAllObsBtn" class="btn btn-sm btn-danger">Excluir Todas</button>
-                    <input type="file" id="obsFileInput" accept=".xlsx,.xls" style="display: none;">
-                </div>
-            </div>
-            <div id="observationsList" class="observations-list"></div>
-        </div>
-
         <!-- Controle da Geração -->
         <div class="card control-card">
             <div class="control-header-section">
@@ -147,7 +133,26 @@
                     <input type="file" id="controlFileInput" accept=".xlsx,.xls" style="display: none;">
                 </div>
             </div>
+
+            <!-- Linha do Tempo -->
+            <div id="timelineContainer" class="timeline-container"></div>
+
+            <!-- Lista de Controles -->
             <div id="generationControlsList" class="controls-list"></div>
+        </div>
+
+        <!-- Sistema de Observações -->
+        <div class="card observations-card">
+            <div class="observations-header">
+                <h2>Observações <span id="obsCount" class="obs-count">(0)</span></h2>
+                <div class="no-print">
+                    <button id="uploadObsBtn" class="btn btn-sm btn-secondary">Carregar Observações</button>
+                    <button id="downloadObsBtn" class="btn btn-sm btn-secondary">Download Observações</button>
+                    <button id="deleteAllObsBtn" class="btn btn-sm btn-danger">Excluir Todas</button>
+                    <input type="file" id="obsFileInput" accept=".xlsx,.xls" style="display: none;">
+                </div>
+            </div>
+            <div id="observationsList" class="observations-list"></div>
         </div>
     </div>
 

@@ -155,10 +155,19 @@ function renderGenerationControls() {
 
     count.textContent = `(${generationControls.length})`;
 
+    // Renderizar linha do tempo
+    renderTimeline();
+
     if (generationControls.length === 0) {
-        list.innerHTML = '<p style="color: #999; text-align: center;">Nenhum registro de controle.</p>';
+        list.innerHTML = '<p style="color: #999; text-align: center; margin-top: 20px; padding-top: 0; border-top: none;">Nenhum registro de controle.</p>';
+        list.style.borderTop = 'none';
+        list.style.paddingTop = '0';
         return;
     }
+
+    // Restaurar borda se houver controles
+    list.style.borderTop = '';
+    list.style.paddingTop = '';
 
     list.innerHTML = '';
 
@@ -189,7 +198,7 @@ function renderGenerationControls() {
         item.innerHTML = `
             <div class="control-header">
                 <div class="control-time-info">
-                    <span class="control-hora"><strong>⏰ ${horaFormatada}</strong></span>
+                    <span class="control-hora"><strong>${horaFormatada}</strong></span>
                     <span class="control-setpoint">Set-point: <strong>${setpointFormatado} MW</strong></span>
                 </div>
                 <div class="control-responsavel ${responsavelClass}">
@@ -491,3 +500,83 @@ function handleControlFileUpload(e) {
 
 // Variável global para controlar edição
 let editingControlIndex = null;
+
+// ===========================
+// LINHA DO TEMPO
+// ===========================
+
+/**
+ * Renderiza a linha do tempo com os controles de geração
+ */
+function renderTimeline() {
+    const container = document.getElementById('timelineContainer');
+
+    if (generationControls.length === 0) {
+        container.innerHTML = '<div class="timeline-empty">Nenhum controle de geração registrado. Adicione registros para visualizar a linha do tempo.</div>';
+        return;
+    }
+
+    // Ordenar controles por hora
+    const sortedControls = [...generationControls].sort((a, b) => {
+        return a.hora.localeCompare(b.hora);
+    });
+
+    // HTML da linha do tempo
+    let html = '<div class="timeline-wrapper">';
+    html += '<h3 class="timeline-title">Linha do Tempo</h3>';
+    html += '<div class="timeline-line">';
+
+    // Horários Início e Fim
+    html += '<div class="timeline-start-time">00:00</div>';
+    html += '<div class="timeline-end-time">24:00</div>';
+
+    // Adicionar eventos na linha do tempo com detecção de sobreposição
+    let lastPercentage = -10; // Inicializa com valor que não causa sobreposição
+    let offsetLevel = 0; // 0, 1, 2 para múltiplos níveis de sobreposição
+
+    sortedControls.forEach((ctrl, index) => {
+        const horaFormatada = ctrl.hora.substring(0, 5);
+        const setpointFormatado = Math.round(ctrl.setpoint);
+
+        // Calcular posição no timeline (0-100%)
+        const [hours, minutes] = horaFormatada.split(':').map(Number);
+        const totalMinutes = hours * 60 + minutes;
+        const percentage = (totalMinutes / (24 * 60)) * 100;
+
+        // Detectar se está muito próximo do evento anterior (menos de 5% de distância)
+        const distance = percentage - lastPercentage;
+        const isNearPrevious = distance < 5;
+
+        // Alternar posição em níveis se houver sobreposição
+        if (isNearPrevious) {
+            offsetLevel = (offsetLevel + 1) % 3; // Cicla entre 0, 1, 2
+        } else {
+            offsetLevel = 0;
+        }
+
+        const offsetClass = offsetLevel === 1 ? 'timeline-event-offset-1' :
+                           offsetLevel === 2 ? 'timeline-event-offset-2' : '';
+
+        html += `
+            <div class="timeline-event ${offsetClass}" style="left: ${percentage}%">
+                <div class="timeline-event-label">${ctrl.responsavel}</div>
+                <div class="timeline-event-time">${horaFormatada}</div>
+                <div class="timeline-arrow-down"></div>
+                <div class="timeline-point"></div>
+                <div class="timeline-event-value">${setpointFormatado} MW</div>
+                ${ctrl.detalhe ? `
+                    <div class="timeline-event-detail">
+                        ${ctrl.detalhe}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+
+        lastPercentage = percentage;
+    });
+
+    html += '</div>'; // timeline-line
+    html += '</div>'; // timeline-wrapper
+
+    container.innerHTML = html;
+}
