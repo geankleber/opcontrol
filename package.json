@@ -1,4 +1,13 @@
 {
+  "name": "opcontrol",
+  "version": "0.1.0",
+  "description": "Sistema de monitoramento e controle de geração - UHE Teles Pires",
+  "author": "Gean Kleber",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geankleber/opcontrol.git"
+  },
   "dependencies": {
     "xlsx": "^0.18.5"
   }

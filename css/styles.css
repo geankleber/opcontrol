@@ -483,6 +483,41 @@ body {
     gap: 10px;
 }
 
+/* ===========================
+   RODAPÉ
+   =========================== */
+
+.footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    border-top: 2px solid #e0e0e0;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.version-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.footer-text {
+    font-size: 0.875rem;
+    color: #666;
+    text-align: center;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .kpi-grid {
