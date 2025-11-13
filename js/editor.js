@@ -28,7 +28,7 @@ function generateDefaultRows() {
     // Começar de 00:30 (pular 00:00)
     rows.push({
         hora: '00:30',
-        pdp: 1790,
+        pdp: null,
         geracao: null,
         status: 'new'
     });
@@ -39,17 +39,17 @@ function generateDefaultRows() {
             const hora = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
             rows.push({
                 hora: hora,
-                pdp: 1790,
+                pdp: null,
                 geracao: null,
                 status: 'new'
             });
         }
     }
 
-    // Adicionar 23:59 no final
+    // Adicionar 24:00 no final
     rows.push({
-        hora: '23:59',
-        pdp: 1790,
+        hora: '24:00',
+        pdp: null,
         geracao: null,
         status: 'new'
     });

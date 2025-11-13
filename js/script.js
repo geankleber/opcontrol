@@ -666,8 +666,8 @@ function renderMainChart() {
                     ticks: {
                         callback: function(value, index, ticks) {
                             const label = this.getLabelForValue(value);
-                            // Exibir horas cheias (terminam com :00) e 23:59
-                            if (label.endsWith(':00') || label === '23:59') {
+                            // Exibir horas cheias (terminam com :00)
+                            if (label.endsWith(':00')) {
                                 return label;
                             }
                             return '';
