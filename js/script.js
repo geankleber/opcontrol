@@ -353,21 +353,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('cancelObsBtn').addEventListener('click', closeModal);
     document.getElementById('saveObsBtn').addEventListener('click', saveObservation);
 
-    // Auto-save draft enquanto digita (com debounce)
-    let draftTimeout;
-    document.getElementById('obsTexto').addEventListener('input', () => {
-        clearTimeout(draftTimeout);
-        draftTimeout = setTimeout(() => {
-            saveDraft();
-        }, 1000); // Salva 1 segundo após parar de digitar
-    });
-
-    // Event Listener - Busca de observações
-    document.getElementById('obsSearchInput').addEventListener('input', (e) => {
-        const searchTerm = e.target.value;
-        renderObservations(searchTerm);
-    });
-
     // Event Listeners - Controle da Geração
     document.getElementById('addControlBtn').addEventListener('click', openGenerationControlModal);
     document.getElementById('uploadControlBtn').addEventListener('click', () => {
@@ -415,36 +400,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // Atualizar todas as visualizações
             updateAllVisualizations();
-        }
-    });
-
-    // ===========================
-    // ATALHOS DE TECLADO
-    // ===========================
-
-    document.addEventListener('keydown', (e) => {
-        const obsModal = document.getElementById('obsModal');
-        const controlModal = document.getElementById('controlModal');
-
-        // ESC: Fechar modais
-        if (e.key === 'Escape') {
-            if (obsModal.style.display === 'block') {
-                closeModal();
-            }
-            if (controlModal.style.display === 'block') {
-                closeGenerationControlModal();
-            }
-        }
-
-        // Ctrl+S: Salvar
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault(); // Prevenir salvamento padrão do navegador
-
-            if (obsModal.style.display === 'block') {
-                saveObservation();
-            } else if (controlModal.style.display === 'block') {
-                saveGenerationControl();
-            }
         }
     });
 });
@@ -788,51 +743,7 @@ function renderHeatmap() {
 // OBSERVAÇÕES
 // ===========================
 
-// Auto-save draft das observações
-const DRAFT_KEY = 'opcontrol_obs_draft';
-
-function saveDraft() {
-    const texto = document.getElementById('obsTexto').value;
-    if (texto.trim()) {
-        const draft = {
-            texto: texto,
-            timestamp: new Date().toISOString()
-        };
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-        console.log('💾 Rascunho salvo automaticamente');
-    }
-}
-
-function loadDraft() {
-    const draftData = localStorage.getItem(DRAFT_KEY);
-    if (draftData) {
-        try {
-            const draft = JSON.parse(draftData);
-            // Verificar se o draft não é muito antigo (máximo 24 horas)
-            const draftAge = Date.now() - new Date(draft.timestamp).getTime();
-            const maxAge = 24 * 60 * 60 * 1000; // 24 horas em millisegundos
-
-            if (draftAge < maxAge && draft.texto.trim()) {
-                const useExisting = document.getElementById('obsTexto').value.trim();
-                if (!useExisting) {
-                    document.getElementById('obsTexto').value = draft.texto;
-                    console.log('📝 Rascunho recuperado');
-                    return true;
-                }
-            }
-        } catch (error) {
-            console.warn('Erro ao carregar rascunho:', error);
-        }
-    }
-    return false;
-}
-
-function clearDraft() {
-    localStorage.removeItem(DRAFT_KEY);
-    console.log('🗑️ Rascunho limpo');
-}
-
-function renderObservations(searchTerm = '') {
+function renderObservations() {
     const list = document.getElementById('observationsList');
     const count = document.getElementById('obsCount');
 
@@ -846,26 +757,9 @@ function renderObservations(searchTerm = '') {
     list.innerHTML = '';
 
     // Ordenar observações por hora (crescente)
-    let sortedObservations = [...observations].sort((a, b) => {
+    const sortedObservations = [...observations].sort((a, b) => {
         return a.hora.localeCompare(b.hora);
     });
-
-    // Filtrar observações pelo termo de busca
-    if (searchTerm.trim()) {
-        const term = searchTerm.toLowerCase();
-        sortedObservations = sortedObservations.filter(obs => {
-            return obs.hora.toLowerCase().includes(term) ||
-                   obs.texto.toLowerCase().includes(term) ||
-                   obs.geracao.toString().includes(term) ||
-                   obs.desvio.toString().includes(term);
-        });
-
-        // Mostrar mensagem se nenhuma observação foi encontrada
-        if (sortedObservations.length === 0) {
-            list.innerHTML = `<p style="color: #999; text-align: center;">Nenhuma observação encontrada para "${searchTerm}".</p>`;
-            return;
-        }
-    }
 
     sortedObservations.forEach((obs, index) => {
         // Encontrar índice original para editar/deletar corretamente
@@ -911,9 +805,6 @@ function openObservationModal(data) {
     document.getElementById('modalTitle').textContent = 'Adicionar Observação';
     editingObsIndex = null;
 
-    // Tentar carregar rascunho salvo
-    loadDraft();
-
     document.getElementById('obsModal').style.display = 'block';
     document.getElementById('obsTexto').focus();
 }
@@ -934,16 +825,9 @@ function editObservation(index) {
 }
 
 async function deleteObservation(index) {
-    const obs = observations[index];
+    if (confirm('Deseja realmente remover esta observação?')) {
+        const obs = observations[index];
 
-    // Criar preview do texto (máximo 50 caracteres)
-    const textoPreview = obs.texto.length > 50
-        ? obs.texto.substring(0, 50) + '...'
-        : obs.texto;
-
-    const confirmMsg = `Deseja realmente remover esta observação?\n\nHora: ${obs.hora}\nDesvio: ${obs.desvio} MW\nTexto: "${textoPreview}"\n\n⚠️ Esta ação não pode ser desfeita!`;
-
-    if (confirm(confirmMsg)) {
         // Tentar deletar do Supabase
         if (supabase && obs.id) {
             const success = await deleteObservationFromSupabase(obs.id);
@@ -956,9 +840,6 @@ async function deleteObservation(index) {
         // Remover do array local
         observations.splice(index, 1);
         renderObservations();
-
-        // Feedback de sucesso
-        console.log('✅ Observação removida com sucesso');
     }
 }
 
@@ -1018,14 +899,12 @@ async function saveObservation() {
     observations.sort((a, b) => a.hora.localeCompare(b.hora));
 
     renderObservations();
-    clearDraft(); // Limpar rascunho após salvar com sucesso
     closeModal();
 }
 
 function closeModal() {
     document.getElementById('obsModal').style.display = 'none';
     editingObsIndex = null;
-    // Não limpar o draft ao fechar - pode ser recuperado depois
 }
 
 async function deleteAllObservations() {

@@ -562,16 +562,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Tentar carregar dados da data atual
     loadDataFromSupabase(currentDate);
-
-    // ===========================
-    // ATALHOS DE TECLADO
-    // ===========================
-
-    document.addEventListener('keydown', (e) => {
-        // Ctrl+S: Salvar dados
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault(); // Prevenir salvamento padrão do navegador
-            saveDataToSupabase();
-        }
-    });
 });
