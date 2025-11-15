@@ -218,8 +218,7 @@ function renderGenerationControls() {
         // Formatar setpoint sem casas decimais
         const setpointFormatado = Math.round(ctrl.setpoint);
 
-        // Ícone/cor por responsável
-        const responsavelIcon = ctrl.responsavel === 'ONS' ? '🏢' : '⚡';
+        // Classe por responsável
         const responsavelClass = ctrl.responsavel === 'ONS' ? 'responsavel-ons' : 'responsavel-axia';
 
         item.innerHTML = `
@@ -228,7 +227,7 @@ function renderGenerationControls() {
                     <span class="control-hora"><strong>${horaFormatada}</strong></span>
                     <span class="control-setpoint">Set-Point: <strong>${setpointFormatado} MW</strong></span>
                     <span class="control-responsavel ${responsavelClass}">
-                        ${responsavelIcon} ${ctrl.responsavel}
+                        ${ctrl.responsavel}
                     </span>
                 </div>
                 <div class="control-right">
