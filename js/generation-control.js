@@ -206,7 +206,7 @@ function renderGenerationControls() {
             <div class="control-header">
                 <div class="control-time-info">
                     <span class="control-hora"><strong>${horaFormatada}</strong></span>
-                    <span class="control-setpoint"><strong>${setpointFormatado} MW</strong></span>
+                    <span class="control-setpoint">Set-point: <strong>${setpointFormatado} MW</strong></span>
                 </div>
                 <div class="control-responsavel ${responsavelClass}">
                     ${responsavelIcon} ${ctrl.responsavel}
@@ -217,7 +217,7 @@ function renderGenerationControls() {
                 </div>
             </div>
             ${ctrl.detalhe ? `<div class="control-detalhe">${ctrl.detalhe}</div>` : ''}
-            <div class="control-timestamp">${timestampStr}</div>
+            <div class="control-timestamp">Registrado em: ${timestampStr}</div>
         `;
 
         list.appendChild(item);
