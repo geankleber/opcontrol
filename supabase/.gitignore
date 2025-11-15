@@ -1,0 +1,7 @@
+# Supabase local development
+.branches
+.temp
+.env.local
+
+# OS
+.DS_Store

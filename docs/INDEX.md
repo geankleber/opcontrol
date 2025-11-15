@@ -136,6 +136,18 @@ Para começar rapidamente, consulte estes documentos primeiro:
 
 ---
 
+### 🔌 Integração com API do ONS
+
+- **[INTEGRACAO-API-ONS.md](INTEGRACAO-API-ONS.md)**
+  - Supabase Edge Function para importação automática de PDP
+  - Configuração de credenciais e secrets
+  - Adaptação da função conforme API do ONS
+  - Deploy e monitoramento
+  - Agendamento automático (cron job)
+  - Troubleshooting e logs
+
+---
+
 ### 💼 Desenvolvimento
 
 - **[CONTRIBUTING.md](CONTRIBUTING.md)**
@@ -219,7 +231,8 @@ Além da documentação, o projeto inclui dados de exemplo:
 - **Deploy**: [DEPLOY.md](DEPLOY.md)
 - **Controle de Geração**: [CONTROLE-GERACAO-MANUAL.md](CONTROLE-GERACAO-MANUAL.md), [INSTALACAO-CONTROLE-GERACAO.md](INSTALACAO-CONTROLE-GERACAO.md), [LINHA-TEMPO-GERACAO.md](LINHA-TEMPO-GERACAO.md)
 - **SQL**: [sql/](sql/)
-- **Integração**: [PLANOS-FUTUROS-INTEGRACAO.md](PLANOS-FUTUROS-INTEGRACAO.md)
+- **Integração**: [PLANOS-FUTUROS-INTEGRACAO.md](PLANOS-FUTUROS-INTEGRACAO.md), [INTEGRACAO-API-ONS.md](INTEGRACAO-API-ONS.md)
+- **API do ONS**: [INTEGRACAO-API-ONS.md](INTEGRACAO-API-ONS.md)
 - **Desenvolvimento**: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ### Por Tarefa
@@ -230,6 +243,7 @@ Além da documentação, o projeto inclui dados de exemplo:
 | Fazer deploy | [DEPLOY.md](DEPLOY.md) |
 | Adicionar controle de geração | [CONTROLE-GERACAO-MANUAL.md](CONTROLE-GERACAO-MANUAL.md) |
 | Criar tabela no banco | [GENERATION-CONTROL-SETUP.md](GENERATION-CONTROL-SETUP.md) |
+| Importar PDP da API do ONS | [INTEGRACAO-API-ONS.md](INTEGRACAO-API-ONS.md) |
 | Implementar integração futura | [PLANOS-FUTUROS-INTEGRACAO.md](PLANOS-FUTUROS-INTEGRACAO.md) |
 | Contribuir com código | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Ver exemplos visuais | [SCREENSHOTS.md](SCREENSHOTS.md) |
@@ -240,11 +254,11 @@ Além da documentação, o projeto inclui dados de exemplo:
 
 | Data | Documento | Mudança |
 |------|-----------|---------|
+| 2025-11-14 | [INTEGRACAO-API-ONS.md](INTEGRACAO-API-ONS.md) | ✨ Criado - Integração automática com API do ONS |
+| 2025-11-14 | [REFATORACAO-TABELAS-PDP.md](REFATORACAO-TABELAS-PDP.md) | ✨ Criado - Refatoração para separar tabelas PDP |
+| 2025-11-14 | [sql/](sql/) | ✨ Criados - Scripts 04, 05, 06 de refatoração |
 | 2025-11-12 | [PLANOS-FUTUROS-INTEGRACAO.md](PLANOS-FUTUROS-INTEGRACAO.md) | ✨ Criado - Plano completo de integração |
-| 2025-11-12 | [sql/](sql/) | ✨ Criados - Scripts SQL prontos |
 | 2025-11-12 | [LINHA-TEMPO-GERACAO.md](LINHA-TEMPO-GERACAO.md) | 🔄 Atualizado - Cores e legendas |
-| 2025-11-12 | [GENERATION-CONTROL-SETUP.md](GENERATION-CONTROL-SETUP.md) | ✨ Criado - Setup da tabela |
-| 2025-11-11 | [CONTROLE-GERACAO-MANUAL.md](CONTROLE-GERACAO-MANUAL.md) | ✨ Criado - Manual do usuário |
 
 ---
 
