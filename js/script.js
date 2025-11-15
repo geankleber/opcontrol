@@ -218,6 +218,128 @@ async function updateGenerationRow(id, geracao) {
 // ===========================
 // DADOS DE EXEMPLO - REMOVIDOS
 // ===========================
+// STATUS DE IMPORTAÇÃO
+// ===========================
+
+async function updateImportStatusBadge() {
+    const badge = document.getElementById('importStatusBadge');
+    if (!badge) return;
+
+    if (!supabase) {
+        badge.innerHTML = '';
+        return;
+    }
+
+    try {
+        const reportDate = document.getElementById('reportDate').value;
+
+        // Mostrar estado de carregamento
+        badge.className = 'import-status-badge loading';
+        badge.innerHTML = '<span class="import-status-icon">⏳</span><span>Verificando...</span>';
+
+        // Buscar dados de PDP
+        const { data: pdpData, error: pdpError } = await supabase
+            .from('pdp_data')
+            .select('import_source, imported_at')
+            .eq('report_date', reportDate)
+            .order('imported_at', { ascending: false })
+            .limit(1);
+
+        if (pdpError) throw pdpError;
+
+        // Buscar dados de geração realizada
+        const { data: genData, error: genError } = await supabase
+            .from('generation_realizada')
+            .select('import_source, imported_at')
+            .eq('report_date', reportDate)
+            .order('imported_at', { ascending: false })
+            .limit(1);
+
+        if (genError) throw genError;
+
+        const hasPdpData = pdpData && pdpData.length > 0;
+        const hasGenData = genData && genData.length > 0;
+
+        if (!hasPdpData && !hasGenData) {
+            // Sem dados
+            badge.className = 'import-status-badge no-data';
+            badge.innerHTML = '<span class="import-status-icon">⚪</span><span>Sem dados</span>';
+            return;
+        }
+
+        const pdpFromAPI = hasPdpData && pdpData[0].import_source === 'ONS_API';
+        const genFromAPI = hasGenData && genData[0].import_source === 'ONS_API';
+
+        let statusClass = '';
+        let icon = '';
+        let label = '';
+        let timeText = '';
+
+        if (pdpFromAPI && genFromAPI) {
+            // Ambos da API
+            statusClass = 'api-imported';
+            icon = '🌐';
+            label = 'Importado da API ONS';
+            const latestTime = new Date(Math.max(
+                new Date(pdpData[0].imported_at),
+                new Date(genData[0].imported_at)
+            ));
+            timeText = formatTimeSince(latestTime);
+        } else if (pdpFromAPI || genFromAPI) {
+            // Misto
+            statusClass = 'mixed-data';
+            icon = '🔄';
+            label = 'Dados Parciais da API';
+            if (pdpFromAPI) {
+                const importTime = new Date(pdpData[0].imported_at);
+                timeText = `PDP: ${formatTimeSince(importTime)}`;
+            } else {
+                const importTime = new Date(genData[0].imported_at);
+                timeText = `Geração: ${formatTimeSince(importTime)}`;
+            }
+        } else {
+            // Manual
+            statusClass = 'manual-data';
+            icon = '✏️';
+            label = 'Dados Manuais';
+            timeText = '';
+        }
+
+        badge.className = `import-status-badge ${statusClass}`;
+        badge.innerHTML = `
+            <span class="import-status-icon">${icon}</span>
+            <span class="import-status-text">
+                <span class="import-status-label">${label}</span>
+                ${timeText ? `<span class="import-status-time">${timeText}</span>` : ''}
+            </span>
+        `;
+
+    } catch (error) {
+        console.error('Erro ao verificar status de importação:', error.message);
+        badge.className = 'import-status-badge no-data';
+        badge.innerHTML = '<span class="import-status-icon">⚠️</span><span>Erro ao verificar</span>';
+    }
+}
+
+function formatTimeSince(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) {
+        return `Há ${diffDays} dia${diffDays > 1 ? 's' : ''}`;
+    } else if (diffHours > 0) {
+        return `Há ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+    } else if (diffMins > 0) {
+        return `Há ${diffMins} minuto${diffMins > 1 ? 's' : ''}`;
+    } else {
+        return 'Agora mesmo';
+    }
+}
+
+// ===========================
 // Dados agora são carregados APENAS do Supabase
 
 // ===========================
@@ -265,6 +387,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     } else {
         generationControls = [];
     }
+
+    // Atualizar badge de status de importação
+    await updateImportStatusBadge();
 
     // Inicializar visualizações
     updateAllVisualizations();
@@ -334,6 +459,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // Carregar controles de geração
             await loadGenerationControlsFromSupabase();
+
+            // Atualizar badge de status de importação
+            await updateImportStatusBadge();
 
             // Atualizar todas as visualizações
             updateAllVisualizations();
