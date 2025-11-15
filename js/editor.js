@@ -249,7 +249,13 @@ async function importPDPFromONS() {
 
             console.log(`✅ PDP importado do ONS: ${result.records} registros`);
         } else {
-            throw new Error(result.error || 'Erro desconhecido ao importar PDP');
+            // Verificar se é erro de dados zerados
+            if (result.error_type === 'DADOS_ZERADOS') {
+                alert(`ℹ️ ${result.message}\n\nData: ${formatDateBR(currentDate)}`);
+                console.log(`ℹ️ Dados zerados para ${currentDate}`);
+            } else {
+                throw new Error(result.error || result.message || 'Erro desconhecido ao importar PDP');
+            }
         }
 
         showLoading(false);

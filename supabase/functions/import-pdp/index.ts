@@ -138,6 +138,13 @@ async function fetchPDPFromONS(
       })
     }
 
+    // Verificar se todos os valores estão zerados
+    const todosZerados = pdpData.every(item => item.pdp === 0)
+
+    if (todosZerados) {
+      throw new Error('DADOS_ZERADOS')
+    }
+
     console.log(`✅ ${pdpData.length} registros de PDP obtidos da API do ONS`)
     return pdpData
   } catch (error) {
@@ -258,7 +265,29 @@ serve(async (req) => {
 
     // 2. Buscar dados de PDP
     console.log('📊 Buscando dados de PDP...')
-    const pdpData = await fetchPDPFromONS(token, date)
+    let pdpData
+
+    try {
+      pdpData = await fetchPDPFromONS(token, date)
+    } catch (error) {
+      // Verificar se é erro de dados zerados
+      if (error.message === 'DADOS_ZERADOS') {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: 'Ainda não existem dados a serem importados.',
+            date: date,
+            error_type: 'DADOS_ZERADOS',
+          }),
+          {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 400,
+          }
+        )
+      }
+      // Outros erros, relançar
+      throw error
+    }
 
     if (pdpData.length === 0) {
       return new Response(
