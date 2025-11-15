@@ -172,14 +172,18 @@ function renderGenerationControls() {
 
     list.innerHTML = '';
 
-    // Ordenar por hora (decrescente - mais recente primeiro)
-    const sortedControls = [...generationControls].sort((a, b) => {
-        return b.hora.localeCompare(a.hora);
-    });
-
     // Determinar quantos controles mostrar
     const maxVisible = 3;
     const isPrinting = window.matchMedia('print').matches;
+
+    // Ordenar por hora
+    // Print: ordem crescente (mais antiga primeiro)
+    // Tela: ordem decrescente (mais recente primeiro)
+    const sortedControls = [...generationControls].sort((a, b) => {
+        return isPrinting
+            ? a.hora.localeCompare(b.hora)  // Crescente para impressão
+            : b.hora.localeCompare(a.hora); // Decrescente para tela
+    });
     const controlsToShow = (showAllControls || isPrinting) ? sortedControls : sortedControls.slice(0, maxVisible);
     const hasMore = sortedControls.length > maxVisible;
 
