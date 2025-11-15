@@ -749,17 +749,23 @@ function renderObservations() {
 
         item.innerHTML = `
             <div class="obs-header">
-                <span class="obs-time">${obs.hora}</span>
-                <div class="obs-data">
-                    Geração: ${obs.geracao} MW | PDP: ${obs.pdp} MW | Desvio: ${desvioFormatted}
+                <div class="obs-left">
+                    <span class="obs-time"><strong>${obs.hora}</strong></span>
+                    <span class="obs-data">
+                        Geração: ${obs.geracao} MW | PDP: ${obs.pdp} MW | Desvio: ${desvioFormatted}
+                    </span>
                 </div>
-                <div class="obs-actions no-print">
-                    <button class="btn-icon" onclick="editObservation(${originalIndex})" title="Editar">✏️</button>
-                    <button class="btn-icon" onclick="deleteObservation(${originalIndex})" title="Remover">🗑️</button>
+                <div class="obs-right">
+                    <span class="obs-timestamp">
+                        <span class="timestamp-label">Registrado em: </span>${timestampStr}
+                    </span>
+                    <div class="obs-actions no-print">
+                        <button class="btn-icon" onclick="editObservation(${originalIndex})" title="Editar">✏️</button>
+                        <button class="btn-icon" onclick="deleteObservation(${originalIndex})" title="Remover">🗑️</button>
+                    </div>
                 </div>
             </div>
             <div class="obs-text">${obs.texto}</div>
-            <div class="obs-timestamp">Registrado em: ${timestampStr}</div>
         `;
 
         list.appendChild(item);

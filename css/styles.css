@@ -323,22 +323,36 @@ body {
 }
 
 .observation-item {
-    background: #f9f9f9;
+    background: #f0f7ff;
     padding: 15px;
     border-radius: 6px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid #4facfe;
 }
 
 .obs-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
     margin-bottom: 8px;
 }
 
+.obs-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.obs-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .obs-time {
-    font-weight: bold;
     color: #2c3e50;
+    font-size: 0.95rem;
 }
 
 .obs-actions {
@@ -362,20 +376,22 @@ body {
 .obs-data {
     font-size: 0.875rem;
     color: #666;
-    margin-left: 15px;
-    margin-right: 15px;
-    flex: 1;
 }
 
 .obs-text {
-    color: #333;
+    color: #555;
     line-height: 1.5;
+    padding: 10px;
+    background: white;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 0.95rem;
 }
 
 .obs-timestamp {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: #999;
-    margin-top: 8px;
+    white-space: nowrap;
 }
 
 /* Modal */
@@ -542,15 +558,21 @@ body {
     }
 
     .obs-header {
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
     }
 
-    .obs-data {
-        order: 3;
-        flex-basis: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        margin-top: 8px;
+    .obs-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .obs-right {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 }
 
@@ -695,24 +717,33 @@ body {
     /* Layout das observações na impressão */
     .obs-header {
         display: flex;
-        justify-content: flex-start;
-        align-items: baseline;
-        margin-bottom: 8px;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .obs-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .obs-right {
+        display: flex;
+        align-items: center;
     }
 
     .obs-time {
-        font-weight: bold;
         color: #2c3e50;
-        flex-shrink: 0;
-        line-height: 1.5;
     }
 
     .obs-data {
         font-size: 0.875rem;
         color: #666;
-        margin-left: 15px;
-        flex: 1;
-        line-height: 1.5;
+    }
+
+    .obs-timestamp {
+        font-size: 0.85rem;
+        color: #999;
     }
 
     /* Estilos do Controle de Geração para impressão */
