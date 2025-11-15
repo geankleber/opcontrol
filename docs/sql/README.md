@@ -6,6 +6,11 @@ Esta pasta contém scripts SQL prontos para implementação futura da integraç�
 
 ### Arquivos Disponíveis
 
+#### ⚙️ Pré-requisitos (Extensões)
+| Arquivo | Descrição | Status | Tempo Estimado |
+|---------|-----------|--------|----------------|
+| `00-enable-pg-cron.sql` | Habilita extensão pg_cron para agendamentos | ✅ Pronto | 2 min |
+
 #### 🔮 Integração Futura (Análise de Controles)
 | Arquivo | Descrição | Status | Tempo Estimado |
 |---------|-----------|--------|----------------|
@@ -19,6 +24,11 @@ Esta pasta contém scripts SQL prontos para implementação futura da integraç�
 | `04-refactor-create-new-tables.sql` | Cria tabelas pdp_data e generation_realizada | ✅ Pronto | 10 min |
 | `05-refactor-migrate-data.sql` | Migra dados da tabela antiga para as novas | ✅ Pronto | 5 min |
 | `06-refactor-create-view-and-triggers.sql` | Cria VIEW e triggers de compatibilidade | ✅ Pronto | 10 min |
+
+#### ⏰ Agendamento Automático (Importação de PDP)
+| Arquivo | Descrição | Status | Tempo Estimado |
+|---------|-----------|--------|----------------|
+| `07-schedule-import-pdp-daily.sql` | Agendamento diário às 23:30 para importar PDP do dia seguinte | ✅ Pronto | 5 min |
 
 ## 🚀 Como Usar
 
