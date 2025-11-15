@@ -732,6 +732,11 @@ body {
         color-adjust: exact;
     }
 
+    /* Ocultar label "Registrado em:" na impressão */
+    .timestamp-label {
+        display: none;
+    }
+
     /* Timeline na impressão */
     .timeline-container {
         page-break-inside: avoid;

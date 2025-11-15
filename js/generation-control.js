@@ -216,7 +216,9 @@ function renderGenerationControls() {
                     </span>
                 </div>
                 <div class="control-right">
-                    <span class="control-timestamp">Registrado em: ${timestampStr}</span>
+                    <span class="control-timestamp">
+                        <span class="timestamp-label">Registrado em: </span>${timestampStr}
+                    </span>
                     <div class="control-actions no-print">
                         <button class="btn-icon" onclick="editGenerationControl(${index})" title="Editar">✏️</button>
                         <button class="btn-icon" onclick="deleteGenerationControl(${index})" title="Remover">🗑️</button>
