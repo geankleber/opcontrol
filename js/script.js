@@ -216,71 +216,9 @@ async function updateGenerationRow(id, geracao) {
 }
 
 // ===========================
-// DADOS DE EXEMPLO
+// DADOS DE EXEMPLO - REMOVIDOS
 // ===========================
-
-const defaultData = [
-    { hora: '00:00', pdp: 1790, geracao: 1785 },
-    { hora: '00:30', pdp: 1790, geracao: 1792 },
-    { hora: '01:00', pdp: 1790, geracao: 1788 },
-    { hora: '01:30', pdp: 1790, geracao: 1795 },
-    { hora: '02:00', pdp: 1790, geracao: 1787 },
-    { hora: '02:30', pdp: 1790, geracao: 1791 },
-    { hora: '03:00', pdp: 1790, geracao: 1789 },
-    { hora: '03:30', pdp: 1790, geracao: 1793 },
-    { hora: '04:00', pdp: 1790, geracao: 1786 },
-    { hora: '04:30', pdp: 1790, geracao: 1790 },
-    { hora: '05:00', pdp: 1790, geracao: 1794 },
-    { hora: '05:30', pdp: 1790, geracao: 1788 },
-    { hora: '06:00', pdp: 1790, geracao: 1791 },
-    { hora: '06:30', pdp: 1790, geracao: 1787 },
-    { hora: '07:00', pdp: 1790, geracao: 1792 },
-    { hora: '07:30', pdp: 1790, geracao: 1789 },
-    { hora: '08:00', pdp: 1790, geracao: 1793 },
-    { hora: '08:30', pdp: 1790, geracao: 1786 },
-    { hora: '09:00', pdp: 1790, geracao: 1795 },
-    { hora: '09:30', pdp: 1790, geracao: 1788 },
-    { hora: '10:00', pdp: 1790, geracao: 1790 },
-    { hora: '10:30', pdp: 1790, geracao: 1792 },
-    { hora: '11:00', pdp: 1790, geracao: 1787 },
-    { hora: '11:30', pdp: 1790, geracao: 1789 },
-    { hora: '12:00', pdp: 1790, geracao: 993 },  // Queda significativa
-    { hora: '12:30', pdp: 1790, geracao: 1005 },
-    { hora: '13:00', pdp: 1790, geracao: 1450 },
-    { hora: '13:30', pdp: 1790, geracao: 1650 },
-    { hora: '14:00', pdp: 1790, geracao: 1750 },
-    { hora: '14:30', pdp: 1790, geracao: 1785 },
-    { hora: '15:00', pdp: 1790, geracao: 1790 },
-    { hora: '15:30', pdp: 1790, geracao: 1788 },
-    { hora: '16:00', pdp: 1790, geracao: 1792 },
-    { hora: '16:30', pdp: 1790, geracao: 1787 },
-    { hora: '17:00', pdp: 1790, geracao: 1791 },
-    { hora: '17:30', pdp: 1790, geracao: 1789 },
-    { hora: '18:00', pdp: 1790, geracao: 1793 },
-    { hora: '18:30', pdp: 1790, geracao: 1786 },
-    { hora: '19:00', pdp: 1790, geracao: 1795 },
-    { hora: '19:30', pdp: 1790, geracao: 1788 },
-    { hora: '20:00', pdp: 1790, geracao: 1790 },
-    { hora: '20:30', pdp: 1790, geracao: 1792 },
-    { hora: '21:00', pdp: 1790, geracao: 1787 },
-    { hora: '21:30', pdp: 1790, geracao: 1789 },
-    { hora: '22:00', pdp: 1790, geracao: 1791 },
-    { hora: '22:30', pdp: 1790, geracao: 1788 },
-    { hora: '23:00', pdp: 1790, geracao: 1793 },
-    { hora: '23:30', pdp: 1790, geracao: 1786 }
-];
-
-// Observação inicial
-const defaultObservations = [
-    {
-        hora: '12:00',
-        geracao: 993,
-        pdp: 1790,
-        desvio: -797,
-        texto: 'Queda significativa de geração - verificar equipamentos',
-        timestamp: new Date().toISOString()
-    }
-];
+// Dados agora são carregados APENAS do Supabase
 
 // ===========================
 // INICIALIZAÇÃO
@@ -293,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Inicializar data com data atual
     initializeReportDate();
 
-    // Carregar dados de geração do Supabase ou usar dados padrão
+    // Carregar dados de geração do Supabase
     if (supabase) {
         const dataLoaded = await loadGenerationDataFromSupabase();
         if (!dataLoaded) {
@@ -302,12 +240,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('ℹ️ Nenhum dado encontrado para a data atual. Use o editor para adicionar dados.');
         }
     } else {
-        // Se Supabase não configurado, usar dados padrão (exemplo)
-        currentData = [...defaultData];
-        console.log('⚠️ Supabase não configurado. Usando dados de exemplo.');
+        // Se Supabase não configurado, array vazio
+        currentData = [];
+        console.log('⚠️ Supabase não configurado. Configure o Supabase para usar a aplicação.');
     }
 
-    // Carregar observações do Supabase ou usar dados padrão
+    // Carregar observações do Supabase
     if (supabase) {
         const loaded = await loadObservationsFromSupabase();
         if (!loaded) {
@@ -316,10 +254,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('ℹ️ Nenhuma observação encontrada para a data atual.');
         }
     } else {
-        // Se Supabase não configurado, usar observações de exemplo
-        observations = [...defaultObservations];
-        observations.sort((a, b) => a.hora.localeCompare(b.hora));
-        console.log('⚠️ Supabase não configurado. Usando observações de exemplo.');
+        // Se Supabase não configurado, array vazio
+        observations = [];
+        console.log('⚠️ Supabase não configurado.');
     }
 
     // Carregar controles de geração do Supabase
@@ -389,7 +326,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Carregar dados de geração
             const dataLoaded = await loadGenerationDataFromSupabase();
             if (!dataLoaded) {
-                currentData = [...defaultData];
+                currentData = [];
             }
 
             // Carregar observações
