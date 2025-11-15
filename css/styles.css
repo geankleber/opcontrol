@@ -742,8 +742,7 @@ body {
     }
 
     .obs-timestamp {
-        font-size: 0.85rem;
-        color: #999;
+        display: none;
     }
 
     /* Estilos do Controle de Geração para impressão */
@@ -763,8 +762,8 @@ body {
         color-adjust: exact;
     }
 
-    /* Ocultar label "Registrado em:" na impressão */
-    .timestamp-label {
+    /* Ocultar timestamp na impressão (controles e observações) */
+    .control-timestamp {
         display: none;
     }
 
