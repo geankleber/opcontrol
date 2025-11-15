@@ -266,6 +266,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         generationControls = [];
     }
 
+    // Resetar estado de expansão da lista de controles
+    showAllControls = false;
+
     // Inicializar visualizações
     updateAllVisualizations();
 
@@ -334,6 +337,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // Carregar controles de geração
             await loadGenerationControlsFromSupabase();
+
+            // Resetar estado de expansão da lista de controles
+            showAllControls = false;
 
             // Atualizar todas as visualizações
             updateAllVisualizations();

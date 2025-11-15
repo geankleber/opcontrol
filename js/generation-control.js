@@ -4,6 +4,7 @@
 // Sistema para registrar alterações de set-point de geração
 
 let generationControls = [];
+let showAllControls = false; // Estado de expansão da lista
 
 // ===========================
 // FUNÇÕES DE PERSISTÊNCIA
@@ -171,12 +172,17 @@ function renderGenerationControls() {
 
     list.innerHTML = '';
 
-    // Ordenar por hora (crescente)
+    // Ordenar por hora (decrescente - mais recente primeiro)
     const sortedControls = [...generationControls].sort((a, b) => {
-        return a.hora.localeCompare(b.hora);
+        return b.hora.localeCompare(a.hora);
     });
 
-    sortedControls.forEach((ctrl) => {
+    // Determinar quantos controles mostrar
+    const maxVisible = 3;
+    const controlsToShow = showAllControls ? sortedControls : sortedControls.slice(0, maxVisible);
+    const hasMore = sortedControls.length > maxVisible;
+
+    controlsToShow.forEach((ctrl) => {
         // Encontrar índice original para editar/deletar
         const index = generationControls.findIndex(c => c.id === ctrl.id || (c.hora === ctrl.hora && c.created_at === ctrl.created_at));
         const item = document.createElement('div');
@@ -215,6 +221,29 @@ function renderGenerationControls() {
 
         list.appendChild(item);
     });
+
+    // Adicionar botão "Ver mais/menos" se houver mais de 3 controles
+    if (hasMore) {
+        const toggleButton = document.createElement('button');
+        toggleButton.className = 'btn btn-sm btn-secondary toggle-controls-btn';
+        toggleButton.style.marginTop = '15px';
+        toggleButton.style.width = '100%';
+        toggleButton.innerHTML = showAllControls
+            ? `▲ Ocultar controles antigos (${sortedControls.length - maxVisible})`
+            : `▼ Ver todos os controles (${sortedControls.length - maxVisible} ocultos)`;
+
+        toggleButton.onclick = toggleShowAllControls;
+
+        list.appendChild(toggleButton);
+    }
+}
+
+/**
+ * Alterna entre mostrar todos ou apenas os 3 mais recentes
+ */
+function toggleShowAllControls() {
+    showAllControls = !showAllControls;
+    renderGenerationControls();
 }
 
 /**
