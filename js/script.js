@@ -9,6 +9,23 @@ let editingObsIndex = null;
 let supabase = null;
 
 // ===========================
+// FUNÇÕES AUXILIARES
+// ===========================
+
+/**
+ * Formata data no padrão DD/MM/AAAA HH:MM
+ */
+function formatDateTime(date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+// ===========================
 // INICIALIZAR SUPABASE
 // ===========================
 
@@ -724,8 +741,7 @@ function renderObservations() {
         const item = document.createElement('div');
         item.className = 'observation-item';
 
-        const timestamp = new Date(obs.timestamp);
-        const timestampStr = timestamp.toLocaleString('pt-BR');
+        const timestampStr = formatDateTime(obs.timestamp);
 
         const desvioFormatted = obs.desvio < 0
             ? `<span style="color: red;">${obs.desvio} MW</span>`

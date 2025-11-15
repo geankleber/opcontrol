@@ -8,6 +8,23 @@ let showAllControls = false; // Estado de expansão da lista
 let isPrintMode = false; // Estado de impressão (controla ordenação)
 
 // ===========================
+// FUNÇÕES AUXILIARES
+// ===========================
+
+/**
+ * Formata data no padrão DD/MM/AAAA HH:MM
+ */
+function formatDateTime(date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+// ===========================
 // FUNÇÕES DE PERSISTÊNCIA
 // ===========================
 
@@ -193,8 +210,7 @@ function renderGenerationControls() {
         const item = document.createElement('div');
         item.className = 'control-item';
 
-        const timestamp = new Date(ctrl.created_at);
-        const timestampStr = timestamp.toLocaleString('pt-BR');
+        const timestampStr = formatDateTime(ctrl.created_at);
 
         // Formatar hora (hh:mm)
         const horaFormatada = ctrl.hora.substring(0, 5); // Pega apenas HH:MM
@@ -466,7 +482,7 @@ function downloadGenerationControls() {
         setpoint: ctrl.setpoint,
         responsavel: ctrl.responsavel,
         detalhe: ctrl.detalhe || '',
-        registrado_em: new Date(ctrl.created_at).toLocaleString('pt-BR')
+        registrado_em: formatDateTime(ctrl.created_at)
     }));
 
     const ws = XLSX.utils.json_to_sheet(exportData);
