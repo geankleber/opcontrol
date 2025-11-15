@@ -204,20 +204,22 @@ function renderGenerationControls() {
 
         item.innerHTML = `
             <div class="control-header">
-                <div class="control-time-info">
+                <div class="control-left">
                     <span class="control-hora"><strong>${horaFormatada}</strong></span>
-                    <span class="control-setpoint">Set-point: <strong>${setpointFormatado} MW</strong></span>
+                    <span class="control-setpoint">Set-Point: <strong>${setpointFormatado} MW</strong></span>
+                    <span class="control-responsavel ${responsavelClass}">
+                        ${responsavelIcon} ${ctrl.responsavel}
+                    </span>
                 </div>
-                <div class="control-responsavel ${responsavelClass}">
-                    ${responsavelIcon} ${ctrl.responsavel}
-                </div>
-                <div class="control-actions no-print">
-                    <button class="btn-icon" onclick="editGenerationControl(${index})" title="Editar">✏️</button>
-                    <button class="btn-icon" onclick="deleteGenerationControl(${index})" title="Remover">🗑️</button>
+                <div class="control-right">
+                    <span class="control-timestamp">Registrado em: ${timestampStr}</span>
+                    <div class="control-actions no-print">
+                        <button class="btn-icon" onclick="editGenerationControl(${index})" title="Editar">✏️</button>
+                        <button class="btn-icon" onclick="deleteGenerationControl(${index})" title="Remover">🗑️</button>
+                    </div>
                 </div>
             </div>
             ${ctrl.detalhe ? `<div class="control-detalhe">${ctrl.detalhe}</div>` : ''}
-            <div class="control-timestamp">Registrado em: ${timestampStr}</div>
         `;
 
         list.appendChild(item);
