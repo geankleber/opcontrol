@@ -279,6 +279,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
+    // Event Listeners - Impressão (forçar exibição de todos os controles)
+    window.addEventListener('beforeprint', () => {
+        const previousState = showAllControls;
+        showAllControls = true;
+        renderGenerationControls();
+        showAllControls = previousState; // Restaurar estado após render
+    });
+
+    window.addEventListener('afterprint', () => {
+        renderGenerationControls(); // Re-renderizar com estado original
+    });
+
     // Event Listeners - Observações
     document.getElementById('uploadObsBtn').addEventListener('click', () => {
         document.getElementById('obsFileInput').click();

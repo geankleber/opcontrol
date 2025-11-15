@@ -179,7 +179,8 @@ function renderGenerationControls() {
 
     // Determinar quantos controles mostrar
     const maxVisible = 3;
-    const controlsToShow = showAllControls ? sortedControls : sortedControls.slice(0, maxVisible);
+    const isPrinting = window.matchMedia('print').matches;
+    const controlsToShow = (showAllControls || isPrinting) ? sortedControls : sortedControls.slice(0, maxVisible);
     const hasMore = sortedControls.length > maxVisible;
 
     controlsToShow.forEach((ctrl) => {
@@ -225,7 +226,7 @@ function renderGenerationControls() {
     // Adicionar botão "Ver mais/menos" se houver mais de 3 controles
     if (hasMore) {
         const toggleButton = document.createElement('button');
-        toggleButton.className = 'btn btn-sm btn-secondary toggle-controls-btn';
+        toggleButton.className = 'btn btn-sm btn-secondary toggle-controls-btn no-print';
         toggleButton.style.marginTop = '15px';
         toggleButton.style.width = '100%';
         toggleButton.innerHTML = showAllControls
