@@ -46,6 +46,7 @@
                     <button id="downloadExcelBtn" class="btn btn-primary">Download .xlsx</button>
                     <button id="saveBtn" class="btn btn-success">Salvar</button>
                     <button id="generateBtn" class="btn btn-secondary">Gerar 48 Linhas</button>
+                    <button id="importPdpBtn" class="btn btn-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🌐 Importar PDP do ONS</button>
                     <button id="clearBtn" class="btn btn-danger">Excluir Geração</button>
                     <button id="deleteBtn" class="btn btn-danger">Excluir Tudo</button>
                     <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
@@ -83,7 +84,8 @@
             <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
                 <li><strong>Mudar Data:</strong> Carrega automaticamente os dados da data selecionada</li>
                 <li><strong>Carregar .xlsx:</strong> Importa dados de um arquivo Excel (colunas: hora, pdp, geracao)</li>
-                <li><strong>Gerar 48 Linhas:</strong> Cria estrutura padrão (00:00-23:30) com PDP 1790 MW</li>
+                <li><strong>Gerar 48 Linhas:</strong> Cria estrutura padrão (00:30-24:00) sem valores preenchidos</li>
+                <li><strong>Importar PDP do ONS:</strong> Busca dados de PDP automaticamente da API do ONS para a data selecionada</li>
                 <li><strong>Editar:</strong> Clique nos campos PDP e Geração para editar (Enter para salvar)</li>
                 <li><strong>Excluir Geração:</strong> Remove apenas os valores de geração (mantém PDP)</li>
                 <li><strong>Salvar:</strong> Sincroniza todos os dados com o Supabase</li>

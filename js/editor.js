@@ -211,6 +211,55 @@ async function deleteDataFromSupabase() {
     }
 }
 
+async function importPDPFromONS() {
+    if (!currentDate) {
+        alert('Selecione uma data primeiro');
+        return;
+    }
+
+    const confirmMsg = `Importar dados de PDP da API do ONS para ${formatDateBR(currentDate)}?\n\nIsso irá substituir os valores de PDP existentes.`;
+
+    if (!confirm(confirmMsg)) {
+        return;
+    }
+
+    showLoading(true);
+
+    try {
+        // Chamar Edge Function
+        const response = await fetch(
+            'https://shjbfriuqrwbnqochybz.supabase.co/functions/v1/import-pdp',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${window.SUPABASE_CONFIG.anonKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ date: currentDate }),
+            }
+        );
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            alert(`✅ ${result.records} registros de PDP importados com sucesso da API do ONS!`);
+
+            // Recarregar dados do Supabase
+            await loadDataFromSupabase(currentDate);
+
+            console.log(`✅ PDP importado do ONS: ${result.records} registros`);
+        } else {
+            throw new Error(result.error || 'Erro desconhecido ao importar PDP');
+        }
+
+        showLoading(false);
+    } catch (error) {
+        console.error('Erro ao importar PDP do ONS:', error);
+        alert(`❌ Erro ao importar PDP do ONS:\n\n${error.message}\n\nVerifique os logs do Supabase para mais detalhes.`);
+        showLoading(false);
+    }
+}
+
 function handleExcelUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -517,6 +566,11 @@ document.addEventListener('DOMContentLoaded', () => {
         editorData = generateDefaultRows();
         renderTable();
         console.log('✅ 48 linhas geradas');
+    });
+
+    // Botão Importar PDP do ONS
+    document.getElementById('importPdpBtn').addEventListener('click', () => {
+        importPDPFromONS();
     });
 
     // Botão Excluir Geração
