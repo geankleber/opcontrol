@@ -742,6 +742,419 @@ Após implementação, avaliar:
 
 ---
 
-**Última atualização:** 2025-11-12
+## 🌐 Melhorias da Integração com API do ONS
+
+### Descrição
+Melhorias na integração existente com a API do ONS para importação de dados de PDP.
+
+---
+
+### 1. **Histórico de Importações** 📊
+
+**Objetivo:** Rastrear todas as tentativas de importação de dados da API do ONS.
+
+**Implementação:**
+
+```sql
+-- Criar tabela de log de importações
+CREATE TABLE pdp_import_log (
+    id BIGSERIAL PRIMARY KEY,
+    import_date DATE NOT NULL,
+    attempted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    status VARCHAR(20) NOT NULL, -- 'success', 'failed', 'partial'
+    source VARCHAR(50) NOT NULL, -- 'manual', 'scheduled', 'batch'
+    records_imported INTEGER DEFAULT 0,
+    error_message TEXT,
+    response_data JSONB,
+    execution_time_ms INTEGER,
+    user_id UUID REFERENCES auth.users(id)
+);
+
+-- Índices
+CREATE INDEX idx_pdp_import_log_date ON pdp_import_log(import_date);
+CREATE INDEX idx_pdp_import_log_status ON pdp_import_log(status);
+CREATE INDEX idx_pdp_import_log_attempted ON pdp_import_log(attempted_at DESC);
+
+-- Comentários
+COMMENT ON TABLE pdp_import_log IS 'Histórico de todas as tentativas de importação de PDP da API do ONS';
+```
+
+**Modificações na Edge Function:**
+
+```typescript
+// Registrar log de importação
+async function logImport(supabaseClient: any, logData: {
+    import_date: string,
+    status: string,
+    source: string,
+    records_imported: number,
+    error_message?: string,
+    execution_time_ms: number
+}) {
+    await supabaseClient
+        .from('pdp_import_log')
+        .insert(logData);
+}
+
+// Uso na função principal
+const startTime = Date.now();
+try {
+    // ... importação ...
+    await logImport(supabaseClient, {
+        import_date: date,
+        status: 'success',
+        source: 'manual',
+        records_imported: pdpData.length,
+        execution_time_ms: Date.now() - startTime
+    });
+} catch (error) {
+    await logImport(supabaseClient, {
+        import_date: date,
+        status: 'failed',
+        source: 'manual',
+        records_imported: 0,
+        error_message: error.message,
+        execution_time_ms: Date.now() - startTime
+    });
+}
+```
+
+**Benefícios:**
+- ✅ Monitorar saúde da integração
+- ✅ Identificar padrões de falha
+- ✅ Auditoria de quando dados foram atualizados
+- ✅ Métricas de performance
+
+**Prioridade:** Alta
+**Complexidade:** Baixa
+**Tempo estimado:** 2 horas
+
+---
+
+### 2. **Importação Retroativa/Em Lote** 📅
+
+**Objetivo:** Permitir importação de múltiplas datas de uma vez.
+
+**Implementação Frontend:**
+
+```html
+<!-- Modal de importação em lote -->
+<div id="batchImportModal" class="modal">
+    <div class="modal-content">
+        <h2>Importar PDP em Lote</h2>
+        <div class="form-group">
+            <label>Data Inicial:</label>
+            <input type="date" id="batchStartDate">
+        </div>
+        <div class="form-group">
+            <label>Data Final:</label>
+            <input type="date" id="batchEndDate">
+        </div>
+        <div id="batchProgress" style="display: none;">
+            <progress id="batchProgressBar" max="100" value="0"></progress>
+            <p id="batchStatus">Importando...</p>
+        </div>
+        <button id="startBatchImportBtn" class="btn btn-primary">Importar</button>
+    </div>
+</div>
+```
+
+**JavaScript:**
+
+```javascript
+async function batchImportPDP(startDate, endDate) {
+    const dates = generateDateRange(startDate, endDate);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < dates.length; i++) {
+        updateProgress((i / dates.length) * 100, `${i + 1}/${dates.length}`);
+
+        try {
+            const result = await importPDPFromONS(dates[i]);
+            if (result.success) successCount++;
+            else failCount++;
+        } catch (error) {
+            failCount++;
+        }
+
+        // Delay para não sobrecarregar API
+        await sleep(2000);
+    }
+
+    alert(`Importação concluída!\n✅ Sucesso: ${successCount}\n❌ Falhas: ${failCount}`);
+}
+
+function generateDateRange(start, end) {
+    const dates = [];
+    let current = new Date(start);
+    const endDate = new Date(end);
+
+    while (current <= endDate) {
+        dates.push(current.toISOString().split('T')[0]);
+        current.setDate(current.getDate() + 1);
+    }
+
+    return dates;
+}
+```
+
+**Benefícios:**
+- ✅ Preencher dados históricos rapidamente
+- ✅ Recuperar lacunas de dados
+- ✅ Facilitar setup inicial
+- ✅ Indicador de progresso visual
+
+**Prioridade:** Média
+**Complexidade:** Média
+**Tempo estimado:** 4 horas
+
+---
+
+### 3. **Validação de Dados Antes de Salvar** ✅
+
+**Objetivo:** Garantir qualidade e consistência dos dados importados.
+
+**Validações Implementadas:**
+
+```typescript
+interface ValidationResult {
+    isValid: boolean;
+    warnings: string[];
+    errors: string[];
+}
+
+function validatePDPData(pdpData: PDPData[], date: string): ValidationResult {
+    const result: ValidationResult = {
+        isValid: true,
+        warnings: [],
+        errors: []
+    };
+
+    // 1. Verificar se há exatamente 48 registros
+    if (pdpData.length !== 48) {
+        result.errors.push(`Número incorreto de registros: ${pdpData.length} (esperado: 48)`);
+        result.isValid = false;
+    }
+
+    // 2. Verificar valores negativos
+    const negativeValues = pdpData.filter(d => d.pdp < 0);
+    if (negativeValues.length > 0) {
+        result.errors.push(`${negativeValues.length} registros com valores negativos`);
+        result.isValid = false;
+    }
+
+    // 3. Verificar valores fora do limite da usina (Teles Pires: 1820 MW)
+    const MAX_CAPACITY = 1820;
+    const outOfRange = pdpData.filter(d => d.pdp > MAX_CAPACITY);
+    if (outOfRange.length > 0) {
+        result.warnings.push(`${outOfRange.length} registros acima da capacidade (${MAX_CAPACITY} MW)`);
+    }
+
+    // 4. Verificar mudanças bruscas (> 200 MW entre períodos)
+    for (let i = 1; i < pdpData.length; i++) {
+        const diff = Math.abs(pdpData[i].pdp - pdpData[i-1].pdp);
+        if (diff > 200) {
+            result.warnings.push(`Mudança brusca detectada: ${pdpData[i-1].hora} -> ${pdpData[i].hora} (${diff.toFixed(1)} MW)`);
+        }
+    }
+
+    // 5. Verificar valores constantes (todos iguais - possível erro)
+    const uniqueValues = new Set(pdpData.map(d => d.pdp));
+    if (uniqueValues.size === 1 && pdpData[0].pdp > 0) {
+        result.warnings.push('Todos os valores são idênticos - possível erro nos dados');
+    }
+
+    // 6. Comparar com dia anterior (se disponível)
+    // ... implementação de comparação histórica ...
+
+    return result;
+}
+
+// Uso na Edge Function
+const validation = validatePDPData(pdpData, date);
+
+if (!validation.isValid) {
+    return new Response(
+        JSON.stringify({
+            success: false,
+            errors: validation.errors,
+            warnings: validation.warnings
+        }),
+        { headers: corsHeaders, status: 400 }
+    );
+}
+
+if (validation.warnings.length > 0) {
+    console.warn('Avisos de validação:', validation.warnings);
+}
+```
+
+**Benefícios:**
+- ✅ Evitar dados inconsistentes
+- ✅ Alertar sobre anomalias
+- ✅ Maior confiabilidade
+- ✅ Detecção precoce de problemas
+
+**Prioridade:** Alta
+**Complexidade:** Média
+**Tempo estimado:** 3 horas
+
+---
+
+### 4. **Comparação Antes de Sobrescrever** ⚖️
+
+**Objetivo:** Mostrar diferenças entre dados existentes e novos dados antes de importar.
+
+**Implementação:**
+
+```javascript
+async function compareAndImport(date) {
+    // 1. Buscar dados existentes
+    const existingData = await supabase
+        .from('pdp_data')
+        .select('*')
+        .eq('report_date', date)
+        .order('hora');
+
+    if (!existingData.data || existingData.data.length === 0) {
+        // Não há dados, importar diretamente
+        await importPDPFromONS(date);
+        return;
+    }
+
+    // 2. Buscar novos dados da API (sem salvar)
+    const newData = await fetchPDPPreview(date);
+
+    // 3. Calcular diferenças
+    const differences = calculateDifferences(existingData.data, newData);
+
+    // 4. Mostrar modal de comparação
+    showComparisonModal(date, existingData.data, newData, differences);
+}
+
+function calculateDifferences(existing, newData) {
+    const diffs = [];
+
+    for (let i = 0; i < Math.min(existing.length, newData.length); i++) {
+        const diff = newData[i].pdp - existing[i].pdp;
+        if (Math.abs(diff) > 1) { // Diferença > 1 MW
+            diffs.push({
+                hora: existing[i].hora,
+                oldValue: existing[i].pdp,
+                newValue: newData[i].pdp,
+                difference: diff,
+                percentChange: (diff / existing[i].pdp * 100).toFixed(1)
+            });
+        }
+    }
+
+    return diffs;
+}
+
+function showComparisonModal(date, existing, newData, differences) {
+    const modal = document.getElementById('comparisonModal');
+    const tbody = document.getElementById('comparisonTableBody');
+
+    let html = '';
+    differences.forEach(d => {
+        const changeClass = d.difference > 0 ? 'positive' : 'negative';
+        html += `
+            <tr>
+                <td>${d.hora}</td>
+                <td>${d.oldValue.toFixed(1)} MW</td>
+                <td>${d.newValue.toFixed(1)} MW</td>
+                <td class="${changeClass}">
+                    ${d.difference > 0 ? '+' : ''}${d.difference.toFixed(1)} MW
+                    (${d.percentChange}%)
+                </td>
+            </tr>
+        `;
+    });
+
+    tbody.innerHTML = html;
+
+    document.getElementById('comparisonSummary').textContent =
+        `${differences.length} diferenças encontradas em ${existing.length} registros`;
+
+    modal.style.display = 'block';
+}
+```
+
+**HTML do Modal:**
+
+```html
+<div id="comparisonModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <h2>Comparar Dados Existentes vs. API ONS</h2>
+        <p id="comparisonSummary"></p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Atual (Banco)</th>
+                    <th>Novo (API)</th>
+                    <th>Diferença</th>
+                </tr>
+            </thead>
+            <tbody id="comparisonTableBody"></tbody>
+        </table>
+
+        <div class="modal-actions">
+            <button id="keepExistingBtn" class="btn btn-secondary">Manter Atual</button>
+            <button id="replaceBtn" class="btn btn-primary">Substituir por API</button>
+            <button id="cancelComparisonBtn" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </div>
+</div>
+```
+
+**Benefícios:**
+- ✅ Transparência total
+- ✅ Evitar sobrescritas acidentais
+- ✅ Identificar mudanças nos dados do ONS
+- ✅ Decisão informada
+
+**Prioridade:** Média
+**Complexidade:** Alta
+**Tempo estimado:** 5 horas
+
+---
+
+### 5. **Importar Geração Realizada** 🏭
+
+**Status:** ❌ **Endpoint não disponível na API pública do ONS**
+
+**Investigação Realizada:**
+- API `integra.ons.org.br` não possui endpoint documentado para geração realizada
+- Portal de Dados Abertos (dados.ons.org.br) disponibiliza apenas arquivos CSV/XLSX para download
+- Não há API REST para consulta programática de dados verificados
+
+**Alternativa Possível:**
+- Download e parsing automático de arquivos CSV do portal de dados abertos
+- Contato com ONS para confirmar disponibilidade de endpoint
+
+**Prioridade:** Baixa (aguardando confirmação de disponibilidade)
+**Status:** Bloqueado - API não disponível
+
+---
+
+## 📅 Roadmap de Implementação Sugerido
+
+### Curto Prazo (1-2 semanas)
+1. ✅ **Validação de Dados** - Garantir qualidade
+2. ✅ **Histórico de Importações** - Rastreabilidade
+
+### Médio Prazo (1 mês)
+3. ⭐ **Importação em Lote** - Produtividade
+4. ⭐ **Comparação de Dados** - Segurança
+
+### Longo Prazo (Futuro)
+5. 🔮 **Geração Realizada** - Aguardar disponibilidade de API
+
+---
+
+**Última atualização:** 2025-11-15
 **Status:** Planejamento completo - Aguardando análise de viabilidade
 **Prioridade:** Baixa - Implementação futura
