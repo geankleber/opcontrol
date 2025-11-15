@@ -798,16 +798,17 @@ body {
 
 .control-item {
     background: #f0f7ff;
-    padding: 15px;
+    padding: 10px 12px;
     border-radius: 6px;
     border-left: 4px solid #4facfe;
+    margin-bottom: 8px;
 }
 
 .control-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     flex-wrap: wrap;
     gap: 10px;
 }
@@ -815,30 +816,30 @@ body {
 .control-time-info {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     flex: 1;
 }
 
 .control-hora {
     font-weight: bold;
     color: #2c3e50;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .control-setpoint {
-    color: #4facfe;
-    font-size: 0.875rem;
+    color: #666;
+    font-size: 0.85rem;
 }
 
 .control-setpoint strong {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     color: #2c3e50;
 }
 
 .control-responsavel {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
 }
@@ -860,18 +861,19 @@ body {
 
 .control-detalhe {
     color: #555;
-    line-height: 1.5;
-    padding: 10px;
+    line-height: 1.4;
+    padding: 6px 8px;
     background: white;
     border-radius: 4px;
-    margin-top: 8px;
-    font-size: 0.875rem;
+    margin-top: 6px;
+    font-size: 0.8rem;
 }
 
 .control-timestamp {
-    font-size: 0.75rem;
-    color: #999;
-    margin-top: 8px;
+    font-size: 0.7rem;
+    color: #aaa;
+    margin-top: 4px;
+    font-style: italic;
 }
 
 /* Estilos do formulário */
