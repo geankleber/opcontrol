@@ -279,15 +279,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
-    // Event Listeners - Impressão (forçar exibição de todos os controles)
+    // Event Listeners - Impressão (forçar exibição de todos os controles em ordem crescente)
     window.addEventListener('beforeprint', () => {
         const previousState = showAllControls;
         showAllControls = true;
+        isPrintMode = true; // Ativa ordenação crescente para impressão
         renderGenerationControls();
         showAllControls = previousState; // Restaurar estado após render
     });
 
     window.addEventListener('afterprint', () => {
+        isPrintMode = false; // Desativa modo de impressão
         renderGenerationControls(); // Re-renderizar com estado original
     });
 

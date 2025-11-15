@@ -5,6 +5,7 @@
 
 let generationControls = [];
 let showAllControls = false; // Estado de expansão da lista
+let isPrintMode = false; // Estado de impressão (controla ordenação)
 
 // ===========================
 // FUNÇÕES DE PERSISTÊNCIA
@@ -174,17 +175,16 @@ function renderGenerationControls() {
 
     // Determinar quantos controles mostrar
     const maxVisible = 3;
-    const isPrinting = window.matchMedia('print').matches;
 
     // Ordenar por hora
     // Print: ordem crescente (mais antiga primeiro)
     // Tela: ordem decrescente (mais recente primeiro)
     const sortedControls = [...generationControls].sort((a, b) => {
-        return isPrinting
+        return isPrintMode
             ? a.hora.localeCompare(b.hora)  // Crescente para impressão
             : b.hora.localeCompare(a.hora); // Decrescente para tela
     });
-    const controlsToShow = (showAllControls || isPrinting) ? sortedControls : sortedControls.slice(0, maxVisible);
+    const controlsToShow = (showAllControls || isPrintMode) ? sortedControls : sortedControls.slice(0, maxVisible);
     const hasMore = sortedControls.length > maxVisible;
 
     controlsToShow.forEach((ctrl) => {
