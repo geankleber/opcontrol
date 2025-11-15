@@ -6,11 +6,19 @@ Esta pasta contém scripts SQL prontos para implementação futura da integraç�
 
 ### Arquivos Disponíveis
 
+#### 🔮 Integração Futura (Análise de Controles)
 | Arquivo | Descrição | Status | Tempo Estimado |
 |---------|-----------|--------|----------------|
 | `01-create-view-generation-with-control.sql` | Cria VIEW que relaciona dados com controles vigentes | ✅ Pronto | 5 min |
 | `02-create-function-analyze-effectiveness.sql` | Cria função para análise de efetividade | ✅ Pronto | 5 min |
 | `03-test-queries.sql` | Queries de teste e exemplos de uso | ✅ Pronto | 10 min |
+
+#### 🔄 Refatoração de Tabelas (Separar PDP)
+| Arquivo | Descrição | Status | Tempo Estimado |
+|---------|-----------|--------|----------------|
+| `04-refactor-create-new-tables.sql` | Cria tabelas pdp_data e generation_realizada | ✅ Pronto | 10 min |
+| `05-refactor-migrate-data.sql` | Migra dados da tabela antiga para as novas | ✅ Pronto | 5 min |
+| `06-refactor-create-view-and-triggers.sql` | Cria VIEW e triggers de compatibilidade | ✅ Pronto | 10 min |
 
 ## 🚀 Como Usar
 

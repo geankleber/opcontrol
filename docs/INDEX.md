@@ -110,6 +110,30 @@ Para começar rapidamente, consulte estes documentos primeiro:
   - Comparativos ONS vs Axia
   - KPIs e relatórios
 
+#### Refatoração de Tabelas
+- **[REFATORACAO-TABELAS-PDP.md](REFATORACAO-TABELAS-PDP.md)**
+  - Proposta de separação de PDP em tabela própria
+  - Motivação e vantagens da separação
+  - Comparação estrutura atual vs nova
+  - Scripts de migração completos
+  - Zero impacto no código frontend
+  - Preparação para integração com API ONS
+
+- **[sql/04-refactor-create-new-tables.sql](sql/04-refactor-create-new-tables.sql)**
+  - Criar tabelas pdp_data e generation_realizada
+  - Índices e constraints
+  - RLS e políticas de acesso
+
+- **[sql/05-refactor-migrate-data.sql](sql/05-refactor-migrate-data.sql)**
+  - Migrar dados existentes
+  - Verificações de integridade
+  - Comparação de contagens
+
+- **[sql/06-refactor-create-view-and-triggers.sql](sql/06-refactor-create-view-and-triggers.sql)**
+  - VIEW de compatibilidade
+  - Triggers INSTEAD OF
+  - Manter código frontend funcionando
+
 ---
 
 ### 💼 Desenvolvimento
