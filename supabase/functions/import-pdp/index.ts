@@ -3,7 +3,7 @@
 // ===================================================
 //
 // Esta função busca dados de Programa Diário de Produção (PDP)
-// da API do ONS e armazena na tabela pdp_data do Supabase.
+// da API do ONS (integra.ons.org.br) e armazena na tabela pdp_data do Supabase.
 //
 // Deploy:
 //   supabase functions deploy import-pdp
@@ -27,9 +27,8 @@ const corsHeaders = {
 }
 
 interface ONSCredentials {
-  username: string
-  password: string
-  apiUrl: string
+  usuario: string
+  senha: string
 }
 
 interface PDPData {
@@ -42,28 +41,33 @@ interface PDPData {
  */
 async function authenticateONS(credentials: ONSCredentials): Promise<string> {
   try {
-    // AJUSTE CONFORME A API DO ONS
-    // Exemplo genérico de autenticação
-    const authResponse = await fetch(`${credentials.apiUrl}/auth/login`, {
+    const url = 'https://integra.ons.org.br/api/autenticar'
+
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
+        'accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: credentials.username,
-        password: credentials.password,
+        usuario: credentials.usuario,
+        senha: credentials.senha,
       }),
     })
 
-    if (!authResponse.ok) {
-      throw new Error(`Falha na autenticação: ${authResponse.status} ${authResponse.statusText}`)
+    if (!response.ok) {
+      throw new Error(`Falha na autenticação: ${response.status} ${response.statusText}`)
     }
 
-    const authData = await authResponse.json()
+    const data = await response.json()
 
-    // AJUSTE: O campo do token pode ter nome diferente
-    // Exemplos comuns: token, access_token, auth_token, jwt
-    return authData.token || authData.access_token || authData.auth_token
+    // A API do ONS retorna o token no campo 'access_token'
+    if (!data.access_token) {
+      throw new Error('Token de acesso não encontrado na resposta da API')
+    }
+
+    console.log('✅ Autenticação bem-sucedida')
+    return data.access_token
   } catch (error) {
     console.error('Erro ao autenticar na API do ONS:', error)
     throw error
@@ -74,64 +78,64 @@ async function authenticateONS(credentials: ONSCredentials): Promise<string> {
  * Busca dados de PDP da API do ONS para uma data específica
  */
 async function fetchPDPFromONS(
-  credentials: ONSCredentials,
   token: string,
   date: string
 ): Promise<PDPData[]> {
   try {
-    // AJUSTE CONFORME A API DO ONS
-    // Exemplo genérico de busca de dados
-    const dataResponse = await fetch(
-      `${credentials.apiUrl}/pdp?date=${date}&usina=UHE_TELES_PIRES`,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    const url = 'https://integra.ons.org.br/api/programacao/usina/ListarGeracaoProposta'
 
-    if (!dataResponse.ok) {
-      throw new Error(`Falha ao buscar dados: ${dataResponse.status} ${dataResponse.statusText}`)
+    // Parsear a data (formato: YYYY-MM-DD)
+    const [year, month, day] = date.split('-').map(Number)
+
+    const requestBody = {
+      Ano: year,
+      Mes: month,
+      Dia: day,
+      CodigosUsinas: ['N2UHTP'], // Código da UHE Teles Pires
     }
 
-    const responseData = await dataResponse.json()
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
 
-    // AJUSTE: Processar conforme o formato retornado pela API
-    // Este é um exemplo genérico - adapte conforme necessário
+    if (!response.ok) {
+      throw new Error(`Falha ao buscar dados: ${response.status} ${response.statusText}`)
+    }
+
+    const responseData = await response.json()
+
+    // Validar estrutura da resposta
+    if (!responseData.Usinas || !Array.isArray(responseData.Usinas) || responseData.Usinas.length === 0) {
+      throw new Error('Resposta da API não contém dados de usinas')
+    }
+
+    // Extrair dados da primeira (e única) usina
+    const usina = responseData.Usinas[0]
+
+    if (!usina.DadoInsumoPatamar || !Array.isArray(usina.DadoInsumoPatamar)) {
+      throw new Error('Dados de patamar não encontrados na resposta')
+    }
+
+    // Processar dados de PDP
     const pdpData: PDPData[] = []
 
-    // Exemplo 1: Se a API retorna array direto
-    if (Array.isArray(responseData)) {
-      for (const item of responseData) {
-        pdpData.push({
-          hora: item.hora || item.timestamp || item.time,
-          pdp: parseFloat(item.pdp || item.valor || item.value || item.programado),
-        })
-      }
-    }
+    for (const entry of usina.DadoInsumoPatamar) {
+      const horaOriginal = entry.PatamarHora // Formato: "HH:MM"
+      const pdpValue = parseFloat(entry.PatamarValor_SUP)
 
-    // Exemplo 2: Se a API retorna objeto com propriedade 'data'
-    else if (responseData.data && Array.isArray(responseData.data)) {
-      for (const item of responseData.data) {
-        pdpData.push({
-          hora: item.hora || item.timestamp || item.time,
-          pdp: parseFloat(item.pdp || item.valor || item.value || item.programado),
-        })
-      }
-    }
+      // Ajustar hora: adicionar 30 minutos (conforme script Python)
+      const horaAjustada = adjustTime(horaOriginal)
 
-    // Exemplo 3: Se a API retorna horários como chaves
-    else if (typeof responseData === 'object') {
-      for (const [hora, valor] of Object.entries(responseData)) {
-        if (hora !== 'metadata' && hora !== 'info') { // Ignorar campos de metadados
-          pdpData.push({
-            hora: hora,
-            pdp: parseFloat(String(valor)),
-          })
-        }
-      }
+      pdpData.push({
+        hora: horaAjustada,
+        pdp: pdpValue,
+      })
     }
 
     console.log(`✅ ${pdpData.length} registros de PDP obtidos da API do ONS`)
@@ -140,6 +144,31 @@ async function fetchPDPFromONS(
     console.error('Erro ao buscar dados da API do ONS:', error)
     throw error
   }
+}
+
+/**
+ * Ajusta a hora adicionando 30 minutos
+ * Exemplo: "00:00" -> "00:30", "23:30" -> "24:00"
+ */
+function adjustTime(timeStr: string): string {
+  const [hours, minutes] = timeStr.split(':').map(Number)
+
+  // Criar data dummy para operação de tempo
+  const date = new Date(2000, 0, 1, hours, minutes)
+
+  // Adicionar 30 minutos
+  date.setMinutes(date.getMinutes() + 30)
+
+  // Se passou para o próximo dia, retornar "24:00"
+  if (date.getDate() > 1) {
+    return '24:00'
+  }
+
+  // Formatar como HH:MM
+  const newHours = String(date.getHours()).padStart(2, '0')
+  const newMinutes = String(date.getMinutes()).padStart(2, '0')
+
+  return `${newHours}:${newMinutes}`
 }
 
 /**
@@ -200,14 +229,13 @@ serve(async (req) => {
   try {
     // Obter credenciais das variáveis de ambiente
     const onsCredentials: ONSCredentials = {
-      username: Deno.env.get('ONS_API_USERNAME') || '',
-      password: Deno.env.get('ONS_API_PASSWORD') || '',
-      apiUrl: Deno.env.get('ONS_API_URL') || '',
+      usuario: Deno.env.get('ONS_API_USERNAME') || '',
+      senha: Deno.env.get('ONS_API_PASSWORD') || '',
     }
 
     // Validar credenciais
-    if (!onsCredentials.username || !onsCredentials.password || !onsCredentials.apiUrl) {
-      throw new Error('Credenciais da API do ONS não configuradas. Configure as variáveis de ambiente: ONS_API_USERNAME, ONS_API_PASSWORD, ONS_API_URL')
+    if (!onsCredentials.usuario || !onsCredentials.senha) {
+      throw new Error('Credenciais da API do ONS não configuradas. Configure as variáveis de ambiente: ONS_API_USERNAME, ONS_API_PASSWORD')
     }
 
     // Obter data do corpo da requisição
@@ -227,11 +255,10 @@ serve(async (req) => {
     // 1. Autenticar na API do ONS
     console.log('🔐 Autenticando na API do ONS...')
     const token = await authenticateONS(onsCredentials)
-    console.log('✅ Autenticação bem-sucedida')
 
     // 2. Buscar dados de PDP
     console.log('📊 Buscando dados de PDP...')
-    const pdpData = await fetchPDPFromONS(onsCredentials, token, date)
+    const pdpData = await fetchPDPFromONS(token, date)
 
     if (pdpData.length === 0) {
       return new Response(
